@@ -45,8 +45,8 @@ variable "aws_transit2_region" {
   default = "eu-west-2"
 }
 
-variable "aws_transit2_name" {
-}
+# variable "aws_transit2_name" {
+# }
 
 variable "aws_transit2_cidr" {
   default = "10.2.200.0/23"

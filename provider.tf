@@ -1,5 +1,6 @@
 provider "aviatrix" {
-  version       = "2.17.1"
+  # version       = "2.17.1"
+  version       = "~> 2.17.1"
   controller_ip = var.controller_ip
   username      = var.username
   password      = var.password
@@ -15,7 +16,7 @@ provider "azurerm" {
 }
 
 provider "google" {
-  project     = "aviatrix-uhoodbhoy"   # REPLACE_ME
+  project     = var.account_name_in_gcp
   region      = "us-east1"
 }
 

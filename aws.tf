@@ -15,6 +15,18 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
+/* data "aws_ami" "ubuntu2" {
+  provider = aws.west2
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+  owners = ["099720109477"] # Canonical
+} */
+
 
 data "aws_ami" "amazon_linux" {
   provider = aws.west

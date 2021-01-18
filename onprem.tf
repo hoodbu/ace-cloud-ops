@@ -73,16 +73,35 @@ resource "aws_instance" "ace-ops-onprem-cisco-csr" {
   }
 }
 
-resource "aws_instance" "ace-ops-onprem-lin" {
+/* resource "aws_instance" "ace-ops-onprem-ubu" {
   provider                    = aws.west2
   instance_type               = "t2.micro"
-  ami                         = data.aws_ami.amazon_linux_west2.id
+  ami                         = data.aws_ami.ubuntu.id
   key_name                    = var.ec2_key_name
   subnet_id                   = module.ace-ops-onprem-partner1.public_subnets[0]
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.ace-ops-onprem-partner1-sg.id]
   tags = {
-    Name = "ace-ops-onprem-lin"
+    Name = "ace-ops-onprem-ubu"
+  }
+} */
+
+module "ace-ops-onprem-ubu" {
+  source                      = "terraform-aws-modules/ec2-instance/aws"
+  instance_type               = var.aws_test_instance_size
+  name                        = "ace-ops-onprem-ubu"
+  ami                         = data.aws_ami.ubuntu.id
+  key_name                    = var.ec2_key_name
+  instance_count              = 1
+  # subnet_id                   = module.aws_spoke_1.vpc.public_subnets[0].subnet_id
+  subnet_id                   = module.ace-ops-onprem-partner1.public_subnets[0]
+  # vpc_security_group_ids      = [module.security_group_1.this_security_group_id]
+  vpc_security_group_ids      = [aws_security_group.ace-ops-onprem-partner1-sg.id]
+  # associate_public_ip_address = false
+  associate_public_ip_address = true
+  user_data_base64            = base64encode(local.user_data)
+  providers                   = {
+    aws = aws.west2
   }
 }
 
@@ -94,10 +113,12 @@ output "aws_onprem_csr_private_ip" {
   value = aws_instance.ace-ops-onprem-cisco-csr.private_ip
 }
 
-output "aws_onprem_lin_public_ip" {
-  value = aws_instance.ace-ops-onprem-lin.public_ip
+output "aws_onprem_ubu_public_ip" {
+  # value = aws_instance.ace-ops-onprem-ubu.public_ip
+  value = module.ace-ops-onprem-ubu.public_ip
 }
 
-output "aws_onprem_lin_private_ip" {
-  value = aws_instance.ace-ops-onprem-lin.private_ip
+output "aws_onprem_ubu_private_ip" {
+  # value = aws_instance.ace-ops-onprem-ubu.private_ip
+  value = module.ace-ops-onprem-ubu.private_ip
 }
