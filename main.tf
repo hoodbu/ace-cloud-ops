@@ -221,7 +221,8 @@ resource "aviatrix_site2cloud" "test_s2c" {
   connection_type                  = "mapped"
   remote_gateway_type              = "generic"
   tunnel_type                      = "route"
-  primary_cloud_gateway_name       = "ace-ops-gcp-us-east1-spoke1"
+  # primary_cloud_gateway_name       = "ace-ops-gcp-us-east1-spoke1"
+  primary_cloud_gateway_name       = "${module.gcp_spoke_1.vpc.name"
   remote_gateway_ip                = aws_instance.ace-ops-onprem-cisco-csr.public_ip
   pre_shared_key                   = "Password123!"
   local_subnet_cidr                = "172.16.211.0/24"
