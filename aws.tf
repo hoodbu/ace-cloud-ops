@@ -15,7 +15,7 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-/* data "aws_ami" "ubuntu2" {
+data "aws_ami" "ubuntu2" {
   provider = aws.west2
   most_recent = true
   filter {
@@ -24,9 +24,10 @@ data "aws_ami" "ubuntu" {
   }
   filter {
     name   = "virtualization-type"
+    values = ["hvm"]
+  }
   owners = ["099720109477"] # Canonical
-} */
-
+}
 
 data "aws_ami" "amazon_linux" {
   provider = aws.west

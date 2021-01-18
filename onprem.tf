@@ -90,7 +90,7 @@ module "ace-ops-onprem-ubu" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   instance_type               = var.aws_test_instance_size
   name                        = "ace-ops-onprem-ubu"
-  ami                         = data.aws_ami.ubuntu.id
+  ami                         = data.aws_ami.ubuntu2.id
   key_name                    = var.ec2_key_name
   instance_count              = 1
   # subnet_id                   = module.aws_spoke_1.vpc.public_subnets[0].subnet_id
