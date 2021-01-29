@@ -67,7 +67,7 @@ resource "aws_instance" "ace-ops-onprem-cisco-csr" {
     ios-config-100 = "username admin privilege 15 password Password123!"
     ios-config-104 = "hostname OnPrem-Partner1"
     ios-config-1010 = "crypto keyring OnPrem-Aviatrix"
-    ios-config-1020 = "pre-shared-key address ${module.gcp_spoke_1.spoke_gateway.eip} key aviatrix-key"
+    ios-config-1020 = "pre-shared-key address ${module.gcp_spoke_1.spoke_gateway.eip} key Password123!"
     ios-config-1030 = "crypto isakmp policy 1"
     ios-config-1040 = "encryption aes 256"
     ios-config-1050 = "hash sha256"
