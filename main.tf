@@ -257,7 +257,7 @@ output "gcp_spoke_1_vpc" {
 }
 
 output "gcp_spoke_1_aviatrix_spoke_gateway" {
-  value = module.gcp_spoke_1.aviatrix_spoke_gateway
+  value = module.gcp_spoke_1.spoke_gateway
 }
 
 output "firewall_public_ip" {
