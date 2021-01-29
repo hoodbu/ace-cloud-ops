@@ -56,9 +56,9 @@ resource "aviatrix_segmentation_security_domain" "orange" {
 } */
 
 module "aws_transit_1" {
-  source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
-  # source              = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
-  # version             = "2.0.1"
+  # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
+  source              = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
+  version             = "2.0.2"
   account                = var.aws_account_name
   region                 = var.aws_transit1_region
   name                   = var.aws_transit1_name
