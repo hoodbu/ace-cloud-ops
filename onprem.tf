@@ -66,7 +66,8 @@ resource "aws_instance" "ace-ops-onprem-cisco-csr" {
   user_data = <<EOF
     ios-config-100 = "username admin privilege 15 password Password123!"
     ios-config-104 = "hostname OnPrem-Partner1"
-    ios-config-110 = "write memory"
+
+    ios-config-1310 = "write memory"
   EOF
   tags = {
     Name = "ace-ops-onprem-cisco-csr"

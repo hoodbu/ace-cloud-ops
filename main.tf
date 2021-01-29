@@ -252,6 +252,10 @@ resource "aviatrix_site2cloud" "test_s2c" {
   }
 } */
 
+output "gcp_spoke_1_public_ip" {
+  value = module.gcp_spoke_1.vpc
+}
+
 output "firewall_public_ip" {
   value = module.aws_transit_1.aviatrix_firewall_instance[0].public_ip
 }
