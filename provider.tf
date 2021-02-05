@@ -1,6 +1,6 @@
 provider "aviatrix" {
   # version       = "2.17.1"
-  version       = "~> 2.17.1"
+  version       = "~> 2.18"
   controller_ip = var.controller_ip
   username      = var.username
   password      = var.password
