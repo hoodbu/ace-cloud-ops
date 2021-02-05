@@ -1,7 +1,8 @@
 // Test Azure RG + VMs
 
 data "template_file" "azure-init" {
-  template = "${file("${path.module}/azure-vm-config/azure_bootstrap.sh")}"
+  # template = "${file("${path.module}/azure-vm-config/azure_bootstrap.sh")}"
+  template = file("${path.module}/azure-vm-config/azure_bootstrap.sh")
 }
 
 # Spoke Ubuntu VM 1

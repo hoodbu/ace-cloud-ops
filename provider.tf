@@ -1,13 +1,10 @@
 provider "aviatrix" {
-  # version       = "2.17.1"
-  version       = "~> 2.18"
   controller_ip = var.controller_ip
   username      = var.username
   password      = var.password
 }
 
 provider "azurerm" {
-  version = "~> 2.0.0"
   features {}
   subscription_id = var.azure_subscription_id
   client_id       = var.azure_client_id

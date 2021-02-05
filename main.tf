@@ -58,7 +58,7 @@ resource "aviatrix_segmentation_security_domain" "orange" {
 module "aws_transit_1" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
   source              = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
-  version             = "2.0.2"
+  version             = "3.0.0"
   account                = var.aws_account_name
   region                 = var.aws_transit1_region
   name                   = var.aws_transit1_name
@@ -77,7 +77,7 @@ module "aws_transit_1" {
 # AWS Spoke Modules
 module "aws_spoke_1" {
   source          = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version         = "2.0.0"
+  version         = "3.0.0"
   account         = var.aws_account_name
   region          = var.aws_spoke1_region
   name            = var.aws_spoke1_name
@@ -91,7 +91,7 @@ module "aws_spoke_1" {
 
 module "aws_spoke_2" {
   source          = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version         = "2.0.0"
+  version         = "3.0.0"
   account         = var.aws_account_name
   region          = var.aws_spoke2_region
   name            = var.aws_spoke2_name
@@ -106,7 +106,7 @@ module "aws_spoke_2" {
 # Azure Transit Module
 module "azure_transit_1" {
   source                 = "terraform-aviatrix-modules/azure-transit/aviatrix"
-  version                = "2.0.0"
+  version                = "3.0.0"
   ha_gw                  = var.ha_enabled
   account                = var.azure_account_name
   region                 = var.azure_transit1_region
@@ -119,7 +119,7 @@ module "azure_transit_1" {
 
 /* module "azure_transit_1" {
   source                 = "terraform-aviatrix-modules/azure-transit-firenet/aviatrix"
-  version                = "2.0.2"
+  version                = "3.0.0"
   account                = var.azure_account_name
   region                 = var.azure_transit1_region
   name                   = var.azure_transit1_name
@@ -136,7 +136,7 @@ module "azure_transit_1" {
 # Azure Spoke 1 
 module "azure_spoke_1" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version         = "2.0.0"
+  version         = "3.0.0"
   account         = var.azure_account_name
   region          = var.azure_spoke1_region
   name            = var.azure_spoke1_name
@@ -152,7 +152,7 @@ module "azure_spoke_1" {
 # Azure Spoke 2
 module "azure_spoke_2" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version         = "2.0.0"
+  version         = "3.0.0"
   account         = var.azure_account_name
   region          = var.azure_spoke2_region
   name            = var.azure_spoke2_name
@@ -167,8 +167,9 @@ module "azure_spoke_2" {
 
 # GCP Transit Module
 module "gcp_transit_1" {
-  source                 = "terraform-aviatrix-modules/gcp-transit/aviatrix"
-  version                = "2.0.0"
+  source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-gcp-transit.git?ref=v3.0.0"
+  # source                 = "terraform-aviatrix-modules/gcp-transit/aviatrix"
+  # version                = "2.0.0"
   account                = var.gcp_account_name
   region                 = var.gcp_transit1_region
   name                   = var.gcp_transit1_name
@@ -181,8 +182,9 @@ module "gcp_transit_1" {
 
 # Aviatrix GCP Spoke 1
 module "gcp_spoke_1" {
-  source     = "terraform-aviatrix-modules/gcp-spoke/aviatrix"
-  version    = "2.0.1"
+  source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-gcp-spoke.git?ref=v3.0.0"
+  # source     = "terraform-aviatrix-modules/gcp-spoke/aviatrix"
+  # version    = "2.0.1"
   account    = var.gcp_account_name
   region     = var.gcp_spoke1_region
   name       = var.gcp_spoke1_name
@@ -210,7 +212,7 @@ resource "aviatrix_gateway" "ace-ops-azure-egress-fqdn" {
 # Multi region Multi-Cloud transit peering
 module "transit-peering" {
   source           = "terraform-aviatrix-modules/mc-transit-peering/aviatrix"
-  version          = "1.0.0"
+  version          = "1.0.2"
   transit_gateways = [module.gcp_transit_1.transit_gateway.gw_name, module.azure_transit_1.transit_gateway.gw_name, module.aws_transit_1.transit_gateway.gw_name]
 }
 

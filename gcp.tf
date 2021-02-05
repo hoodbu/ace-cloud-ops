@@ -1,7 +1,8 @@
 // Test GCP VM
 
 data "template_file" "gcp-init" {
-  template = "${file("${path.module}/gcp-vm-config/gcp_bootstrap.sh")}"
+  # template = "${file("${path.module}/gcp-vm-config/gcp_bootstrap.sh")}"
+  template = file("${path.module}/gcp-vm-config/gcp_bootstrap.sh")
 }
 
 resource "google_compute_firewall" "gcp-comp-firewall" {
