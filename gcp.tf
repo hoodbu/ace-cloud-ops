@@ -50,5 +50,5 @@ output "gcp_spoke1_ubu_public_ip" {
 }
 
 output "gcp_spoke1_ubu_private_ip" {
-  value = google_compute_instance.gcp-spoke1-network_interface[0].network_ip
+  value = google_compute_instance.gcp-spoke1-ubu.network_interface[0].network_ip
 }
