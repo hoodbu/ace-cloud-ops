@@ -197,7 +197,7 @@ module "gcp_spoke_1" {
 }
 
 # Create another Gateway in the Azure Spoke for Egress FQDN (later on)
-resource "aviatrix_gateway" "ace-ops-azure-egress-fqdn" {
+resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
   cloud_type   = 8
   account_name = var.azure_account_name
   gw_name      = "${var.azure_spoke2_name}-egress"
@@ -219,13 +219,13 @@ resource "aviatrix_gateway" "ace-ops-azure-egress-fqdn" {
  # Create an Aviatrix Site2cloud Connection
 resource "aviatrix_site2cloud" "test_s2c" {
   vpc_id                           = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
-  connection_name                  = "ACE-OPS-LONDON-BRANCH"
+  connection_name                  = "ACE-LONDON-BRANCH"
   connection_type                  = "mapped"
   remote_gateway_type              = "generic"
   tunnel_type                      = "route"
-  # primary_cloud_gateway_name       = "ace-ops-gcp-us-east1-spoke1"
+  # primary_cloud_gateway_name       = "ace-gcp-us-east1-spoke1"
   primary_cloud_gateway_name       = module.gcp_spoke_1.vpc.name
-  remote_gateway_ip                = aws_instance.ace-ops-onprem-cisco-csr.public_ip
+  remote_gateway_ip                = aws_instance.ace-onprem-cisco-csr.public_ip
   pre_shared_key                   = "Password123!"
   local_subnet_cidr                = "172.16.211.0/24"
   local_subnet_virtual             = "192.168.1.0/24"
@@ -239,7 +239,7 @@ resource "aviatrix_site2cloud" "test_s2c" {
   fqdn_enabled = true
   fqdn_mode    = "white"
   gw_filter_tag_list {
-    gw_name        = aviatrix_gateway.ace-ops-azure-egress-fqdn.gw_name
+    gw_name        = aviatrix_gateway.ace-azure-egress-fqdn.gw_name
   }
   domain_names {
     fqdn  = "ubuntu.com"
@@ -254,13 +254,13 @@ resource "aviatrix_site2cloud" "test_s2c" {
   }
 } */
 
-output "gcp_spoke_1_vpc" {
+/* output "gcp_spoke_1_vpc" {
   value = module.gcp_spoke_1.vpc
 }
 
 output "gcp_spoke_1_aviatrix_spoke_gateway" {
   value = module.gcp_spoke_1.spoke_gateway
-}
+} */
 
 output "firewall_public_ip" {
   value = module.aws_transit_1.aviatrix_firewall_instance[0].public_ip
