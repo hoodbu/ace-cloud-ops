@@ -12,17 +12,17 @@ resource "aviatrix_rbac_group_access_account_attachment" "rbac_group_access_acco
 
 
 ### Permission Group to User Attachment
-resource "aviatrix_rbac_group_user_attachment" "rbac_group_user_attachment_2" {
+resource "aviatrix_rbac_group_user_attachment" "rbac_group_user_attachment_1" {
     group_name = "local-students"
     user_name = "pod1"
 }
 
 
 ### Permission User Credentials
-resource "aviatrix_account_user" "account_user_2" {
+resource "aviatrix_account_user" "account_user_1" {
     username = "pod1"
     email = "uhoodbhoy@aviatrix.com"
-    password = "Password123!"
+    password = var.ace_password
 }
 
 ### Permission Group to Permission Set Attachment
