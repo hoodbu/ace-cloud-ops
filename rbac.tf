@@ -22,7 +22,7 @@ resource "aviatrix_rbac_group_user_attachment" "rbac_group_user_attachment_2" {
 resource "aviatrix_account_user" "account_user_2" {
     username = "pod1"
     email = "uhoodbhoy@aviatrix.com"
-    password = ""
+    password = "Password123!"
 }
 
 ### Permission Group to Permission Set Attachment
