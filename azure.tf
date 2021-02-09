@@ -1,29 +1,20 @@
-// Test Azure RG + VMs
-
-data "template_file" "azure-init" {
-  # template = "${file("${path.module}/azure-vm-config/azure_bootstrap.sh")}"
+data "template_file" "azure-spoke1-init" {
   template = file("${path.module}/azure-vm-config/azure_bootstrap.sh")
+  vars = {
+    name     = "BU1-DB"
+    password = var.ace_password
+  }
 }
 
 # Spoke Ubuntu VM 1
-/* resource "azurerm_public_ip" "pip" {
-  name                 = "${var.azure_spoke1_name}-pip"
-  resource_group_name  = module.azure_spoke_1.vnet.resource_group
-  location             = var.azure_spoke1_region
-  allocation_method   = "Dynamic"
-} */
-
 resource "azurerm_network_interface" "main" {
   name                 = "${var.azure_spoke1_name}-nic1"
   resource_group_name  = module.azure_spoke_1.vnet.resource_group
   location             = var.azure_spoke1_region
   ip_configuration {
-    # name                          = module.azure_spoke_1.vnet.public_subnets[0].name
-    # subnet_id                     = module.azure_spoke_1.vnet.public_subnets[0].subnet_id
     name                          = module.azure_spoke_1.vnet.private_subnets[0].name
     subnet_id                     = module.azure_spoke_1.vnet.private_subnets[0].subnet_id
     private_ip_address_allocation = "Dynamic"
-    # public_ip_address_id          = azurerm_public_ip.pip.id
   }
 }
 
@@ -86,7 +77,7 @@ resource "azurerm_linux_virtual_machine" "azure_spoke1_vm" {
   location                        = var.azure_spoke1_region
   size                            = "Standard_B1ms"
   admin_username                  = "ubuntu"
-  admin_password                  = "Password123!"
+  admin_password                  = var.ace_password
   disable_password_authentication = false
   network_interface_ids = [
     azurerm_network_interface.main.id,
@@ -106,28 +97,27 @@ resource "azurerm_linux_virtual_machine" "azure_spoke1_vm" {
     storage_account_type = "Standard_LRS"
     caching              = "ReadWrite"
   }
-  custom_data = base64encode(data.template_file.azure-init.rendered)
+  custom_data = base64encode(data.template_file.azure-spoke1-init.rendered)
 }
 
+
 # Spoke Ubuntu VM 2
-/* resource "azurerm_public_ip" "pip2" {
-  name                 = "${var.azure_spoke2_name}-pip"
-  resource_group_name  = module.azure_spoke_2.vnet.resource_group
-  location             = var.azure_spoke2_region
-  allocation_method   = "Dynamic"
-} */
+data "template_file" "azure-spoke2-init" {
+  template = file("${path.module}/azure-vm-config/azure_bootstrap.sh")
+  vars = {
+    name     = "BU2-DB"
+    password = var.ace_password
+  }
+}
 
 resource "azurerm_network_interface" "main2" {
   name                 = "${var.azure_spoke2_name}-nic1"
   resource_group_name  = module.azure_spoke_2.vnet.resource_group
   location             = var.azure_spoke2_region
   ip_configuration {
-    # name                          = module.azure_spoke_2.vnet.public_subnets[0].name
-    # subnet_id                     = module.azure_spoke_2.vnet.public_subnets[0].subnet_id
     name                          = module.azure_spoke_2.vnet.private_subnets[0].name
     subnet_id                     = module.azure_spoke_2.vnet.private_subnets[0].subnet_id
     private_ip_address_allocation = "Dynamic"
-    # public_ip_address_id          = azurerm_public_ip.pip2.id
   }
 }
 
@@ -190,7 +180,7 @@ resource "azurerm_linux_virtual_machine" "azure_spoke2_vm" {
   location                        = var.azure_spoke2_region
   size                            = "Standard_B1ms"
   admin_username                  = "ubuntu"
-  admin_password                  = "Password123!"
+  admin_password                  = var.ace_password
   disable_password_authentication = false
   network_interface_ids = [
     azurerm_network_interface.main2.id,
@@ -210,11 +200,8 @@ resource "azurerm_linux_virtual_machine" "azure_spoke2_vm" {
     storage_account_type = "Standard_LRS"
     caching              = "ReadWrite"
   }
-  custom_data = base64encode(data.template_file.azure-init.rendered)
+  custom_data = base64encode(data.template_file.azure-spoke2-init.rendered)
 }
-
-
-
 
 output "azure_spoke1_ubu_private_ip" {
   value = azurerm_linux_virtual_machine.azure_spoke1_vm.private_ip_address

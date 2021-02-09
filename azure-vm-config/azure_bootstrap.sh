@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sudo hostnamectl set-hostname ${name}
 sudo apt update -y
 sudo apt upgrade -y
 
