@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# allow linuix access by password 
+# allow Linux access by password 
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-sudo echo 'ubuntu:Password123!' | /usr/sbin/chpasswd
+# sudo echo 'ubuntu:Password123!' | /usr/sbin/chpasswd
+sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
 sudo /etc/init.d/ssh restart
