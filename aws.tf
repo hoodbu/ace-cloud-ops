@@ -75,7 +75,7 @@ sudo apt upgrade -y
 sudo apt-get -y install traceroute unzip build-essential git gcc iperf3 apache2
 sudo apt autoremove
 sudo /etc/init.d/ssh restart
-PS1="\u@BU1 Frontend :~$"
+echo 'PS1="\u@BU1 Frontend :~$"' >> ~/.bashrc
 EOF
 }
 
@@ -89,7 +89,7 @@ sudo apt upgrade -y
 sudo apt-get -y install traceroute unzip build-essential git gcc iperf3 apache2
 sudo apt autoremove
 sudo /etc/init.d/ssh restart
-PS1="\u@BU2 Mobile App :~$"
+echo 'PS1="\u@BU2 Mobile App :~$"' >> ~/.bashrc
 EOF
 }
 
