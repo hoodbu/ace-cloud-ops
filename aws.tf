@@ -68,6 +68,7 @@ data "aws_ami" "amazon_linux_west2" {
 locals {
   bu1_frontend_user_data = <<EOF
 #!/bin/bash
+sudo hostnamectl set-hostname "BU1-Frontend"
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
 sudo apt update -y
@@ -75,13 +76,13 @@ sudo apt upgrade -y
 sudo apt-get -y install traceroute unzip build-essential git gcc iperf3 apache2
 sudo apt autoremove
 sudo /etc/init.d/ssh restart
-echo 'PS1="\u@BU1 Frontend :~$"' >> ~/.bashrc
 EOF
 }
 
 locals {
   bu2_mobile_app_user_data = <<EOF
 #!/bin/bash
+sudo hostnamectl set-hostname "BU2-Mobile-App"
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
 sudo apt update -y
@@ -89,7 +90,6 @@ sudo apt upgrade -y
 sudo apt-get -y install traceroute unzip build-essential git gcc iperf3 apache2
 sudo apt autoremove
 sudo /etc/init.d/ssh restart
-echo 'PS1="\u@BU2 Mobile App :~$"' >> ~/.bashrc
 EOF
 }
 
