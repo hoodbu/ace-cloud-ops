@@ -3,6 +3,7 @@
 locals {
   onprem_user_data = <<EOF
 #!/bin/bash
+sudo hostnamectl set-hostname "Call-Center"
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
 sudo apt update -y
@@ -10,8 +11,6 @@ sudo apt upgrade -y
 sudo apt-get -y install traceroute unzip build-essential git gcc iperf3 apache2
 sudo apt autoremove
 sudo /etc/init.d/ssh restart
-echo 'PS1="\u@Call Center :~$"' >> /home/ubuntu/.bashrc
-source /home/ubuntu/.bashrc
 EOF
 }
 
