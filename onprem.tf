@@ -78,7 +78,7 @@ resource "aws_instance" "ace-onprem-cisco-csr" {
   key_name                    = aws_key_pair.aws_west2_key.key_name
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner1-sg.id]
   user_data = <<EOF
-    ios-config-100 = "username admin privilege 15 password Password123!"
+    ios-config-100 = "username admin privilege 15 password ${var.ace_password}"
     ios-config-104 = "hostname OnPrem-Partner1"
     ios-config-1010 = "crypto keyring OnPrem-Aviatrix"
     ios-config-1020 = "pre-shared-key address ${module.gcp_spoke_1.spoke_gateway.eip} key ${var.ace_password}"

@@ -66,7 +66,7 @@ data "aws_ami" "amazon_linux_west2" {
 }
 
 locals {
-  user_data = <<EOF
+  bu1_frontend_user_data = <<EOF
 #!/bin/bash
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
@@ -75,6 +75,21 @@ sudo apt upgrade -y
 sudo apt-get -y install traceroute unzip build-essential git gcc iperf3 apache2
 sudo apt autoremove
 sudo /etc/init.d/ssh restart
+PS1="\u@BU1 Frontend :~$"
+EOF
+}
+
+locals {
+  bu2_mobile_app_user_data = <<EOF
+#!/bin/bash
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt-get -y install traceroute unzip build-essential git gcc iperf3 apache2
+sudo apt autoremove
+sudo /etc/init.d/ssh restart
+PS1="\u@BU2 Mobile App :~$"
 EOF
 }
 
@@ -115,35 +130,12 @@ module "aws_spoke_ubu_1" {
   instance_count              = 1
   subnet_id                   = module.aws_spoke_1.vpc.public_subnets[0].subnet_id
   vpc_security_group_ids      = [module.security_group_1.this_security_group_id]
-  # associate_public_ip_address = false
   associate_public_ip_address = true
-  user_data_base64            = base64encode(local.user_data)
+  user_data_base64            = base64encode(local.bu1_frontend_user_data)
   providers                   = {
     aws = aws.west
   }
 }
-
-
-
-/* resource "aws_instance" "aws_spoke_1" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = var.aws_test_instance_size
-  key_name                    = var.ec2_key_name
-  subnet_id                   = module.aws_spoke_1.vpc.private_subnets[0].subnet_id
-  associate_public_ip_address = false
-  security_groups             = [module.security_group_1.this_security_group_id]
-  user_data                   = base64encode(local.user_data)
-  provider = aws.west
-  lifecycle {
-    ignore_changes = [security_groups]
-  }
-  tags = {
-    Name                      = "${var.aws_spoke1_name}-ubu"
-  }
-} */
-
-
-
 
 module "aws_spoke_ubu_2" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
@@ -154,30 +146,12 @@ module "aws_spoke_ubu_2" {
   instance_count              = 1
   subnet_id                   = module.aws_spoke_2.vpc.public_subnets[0].subnet_id
   vpc_security_group_ids      = [module.security_group_2.this_security_group_id]
-  # associate_public_ip_address = false
   associate_public_ip_address = true
-  user_data_base64            = base64encode(local.user_data)
+  user_data_base64            = base64encode(local.bu2_mobile_app_user_data)
   providers                   = {
     aws = aws.west
   }
 }
-
-/* resource "aws_instance" "aws_spoke_2" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = var.aws_test_instance_size
-  key_name                    = var.ec2_key_name
-  subnet_id                   = module.aws_spoke_2.vpc.private_subnets[0].subnet_id
-  associate_public_ip_address = false
-  security_groups             = [module.security_group_2.this_security_group_id]
-  user_data                   = base64encode(local.user_data)
-  provider = aws.west
-  lifecycle {
-    ignore_changes = [security_groups]
-  }
-  tags = {
-    Name                      = "${var.aws_spoke2_name}-ubu"
-  }
-} */
 
 output "aws_spoke1_ubu_public_ip" {
   value = module.aws_spoke_ubu_1.public_ip

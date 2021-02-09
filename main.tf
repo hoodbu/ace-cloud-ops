@@ -226,7 +226,7 @@ resource "aviatrix_site2cloud" "test_s2c" {
   # primary_cloud_gateway_name       = "ace-gcp-us-east1-spoke1"
   primary_cloud_gateway_name       = module.gcp_spoke_1.vpc.name
   remote_gateway_ip                = aws_instance.ace-onprem-cisco-csr.public_ip
-  pre_shared_key                   = "Password123!"
+  pre_shared_key                   = var.ace_password
   local_subnet_cidr                = "172.16.211.0/24"
   local_subnet_virtual             = "192.168.1.0/24"
   remote_subnet_cidr               = "172.16.211.0/24"
