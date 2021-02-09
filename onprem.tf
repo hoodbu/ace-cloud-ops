@@ -1,5 +1,19 @@
 // AWS Marketplace Opt-in Required - https://aws.amazon.com/marketplace/pp?sku=9fmjj3b9hombuy4jawab1i13i
 
+locals {
+  onprem_user_data = <<EOF
+#!/bin/bash
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt-get -y install traceroute unzip build-essential git gcc iperf3 apache2
+sudo apt autoremove
+sudo /etc/init.d/ssh restart
+PS1="\u@Call-Center :~$"
+EOF
+}
+
 module "ace-onprem-partner1" {
   providers      = { aws = aws.west2 }
   source         = "terraform-aws-modules/vpc/aws"
@@ -67,7 +81,7 @@ resource "aws_instance" "ace-onprem-cisco-csr" {
     ios-config-100 = "username admin privilege 15 password Password123!"
     ios-config-104 = "hostname OnPrem-Partner1"
     ios-config-1010 = "crypto keyring OnPrem-Aviatrix"
-    ios-config-1020 = "pre-shared-key address ${module.gcp_spoke_1.spoke_gateway.eip} key Password123!"
+    ios-config-1020 = "pre-shared-key address ${module.gcp_spoke_1.spoke_gateway.eip} key ${var.ace_password}"
     ios-config-1030 = "crypto isakmp policy 1"
     ios-config-1040 = "encryption aes 256"
     ios-config-1050 = "hash sha256"
@@ -129,7 +143,7 @@ module "ace-onprem-ubu" {
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner1-sg.id]
   # associate_public_ip_address = false
   associate_public_ip_address = true
-  user_data_base64            = base64encode(local.user_data)
+  user_data_base64            = base64encode(local.onprem_user_data)
   providers                   = {
     aws = aws.west2
   }

@@ -69,7 +69,7 @@ locals {
   user_data = <<EOF
 #!/bin/bash
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-sudo echo 'ubuntu:Password123!' | /usr/sbin/chpasswd
+sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
 sudo apt update -y
 sudo apt upgrade -y
 sudo apt-get -y install traceroute unzip build-essential git gcc iperf3 apache2
