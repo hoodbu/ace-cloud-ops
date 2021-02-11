@@ -6,13 +6,6 @@ data "template_file" "gcp-init" {
     name     = "BU1-Analytics"
     password = var.ace_password
   }
-/*   template = <<EOF
-#!/bin/bash
-sudo hostnamectl set-hostname "BU1-Analytics"
-sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
-sudo /etc/init.d/ssh restart
-EOF */
 }
 
 resource "google_compute_firewall" "gcp-comp-firewall" {

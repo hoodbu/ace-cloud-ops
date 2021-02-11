@@ -21,7 +21,7 @@ resource "aviatrix_rbac_group_user_attachment" "rbac_group_user_attachment_1" {
 ### Permission User Credentials
 resource "aviatrix_account_user" "account_user_1" {
     username = "pod1"
-    email = "uhoodbhoy@aviatrix.com"
+    email = var.ace_email
     password = var.ace_password
 }
 
