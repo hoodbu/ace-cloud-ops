@@ -14,7 +14,7 @@ resource "aviatrix_rbac_group_access_account_attachment" "rbac_group_access_acco
 ### Permission Group to User Attachment
 resource "aviatrix_rbac_group_user_attachment" "rbac_group_user_attachment_1" {
     group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    user_name = "pod1"
+    user_name = "aviatrix_account_user.account_user_1"
 }
 
 
