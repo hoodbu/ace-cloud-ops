@@ -117,6 +117,21 @@ resource "aws_instance" "ace-onprem-cisco-csr" {
   }
 }
 
+data "aws_instance" "ace-onprem-cisco-csr" {
+  provider = aws.west2
+  filter {
+    name   = "tag:Name"
+    values = [ "ace-onprem-cisco-csr" ]
+  }
+}
+resource "aws_route" "ace-onprem-mapped-route" {
+  provider               = aws.west2
+  route_table_id         = module.ace-onprem-partner1.vpc_main_route_table_id
+  destination_cidr_block = "192.168.1.0/24"
+  network_interface_id   = data.aws_instance.ace-onprem-cisco-csr.network_interface_id
+  depends_on             = [ module.ace-onprem-partner1, aws_instance.ace-onprem-cisco-csr ]
+}
+
 module "ace-onprem-ubu" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   instance_type               = var.aws_test_instance_size
