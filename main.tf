@@ -40,21 +40,6 @@ resource "aviatrix_segmentation_security_domain" "orange" {
 } */
 
 # AWS Transit Modules
-/* module "aws_transit_1" {
-  source              = "terraform-aviatrix-modules/aws-transit/aviatrix"
-  version             = "2.0.0"
-  account                = var.aws_account_name
-  region                 = var.aws_transit1_region
-  name                   = var.aws_transit1_name
-  cidr                   = var.aws_transit1_cidr
-  ha_gw                  = var.ha_enabled
-  prefix                 = var.prefix
-  suffix                 = var.suffix
-  insane_mode            = false
-  instance_size          = var.aws_transit_instance_size
-  enable_segmentation    = true
-} */
-
 module "aws_transit_1" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
   source              = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
@@ -66,7 +51,7 @@ module "aws_transit_1" {
   ha_gw                  = var.ha_enabled
   prefix                 = var.prefix
   suffix                 = var.suffix
-  egress_enabled         = true
+  egress_enabled         = false
   insane_mode            = false
   instance_size          = var.aws_transit_instance_size
   enable_segmentation    = true
