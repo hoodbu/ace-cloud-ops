@@ -124,9 +124,14 @@ data "aws_instance" "ace-onprem-cisco-csr" {
     values = [ "ace-onprem-cisco-csr" ]
   }
 }
+data "aws_route_table" "ace-onprem-cisco-rtb" {
+  provider = aws.west2
+  subnet_id = module.ace-onprem-partner1.public_subnets[0]
+}
+
 resource "aws_route" "ace-onprem-mapped-route" {
   provider               = aws.west2
-  route_table_id         = module.ace-onprem-partner1.vpc_main_route_table_id
+  route_table_id         = data.aws_route_table.ace-onprem-cisco-rtb.id
   destination_cidr_block = "192.168.1.0/24"
   network_interface_id   = data.aws_instance.ace-onprem-cisco-csr.network_interface_id
   depends_on             = [ module.ace-onprem-partner1, aws_instance.ace-onprem-cisco-csr ]
