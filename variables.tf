@@ -43,6 +43,7 @@ variable "aws_transit1_region" {
 }
 
 variable "aws_transit1_name" {
+  default = "ace-aws-eu-west-1-transit1"
 }
 
 variable "aws_transit1_cidr" {
@@ -52,9 +53,6 @@ variable "aws_transit1_cidr" {
 variable "aws_transit2_region" {
   default = "eu-west-2"
 }
-
-# variable "aws_transit2_name" {
-# }
 
 variable "aws_transit2_cidr" {
   default = "10.2.200.0/23"
@@ -69,6 +67,7 @@ variable "aws_spoke1_region" {
 }
 
 variable "aws_spoke1_name" {
+  default = "ace-aws-eu-west-1-spoke1"
 }
 
 variable "aws_spoke1_cidr" {
@@ -80,6 +79,7 @@ variable "aws_spoke2_region" {
 }
 
 variable "aws_spoke2_name" {
+  default = "ace-aws-eu-west-1-spoke2"
 }
 
 variable "aws_spoke2_cidr" {
@@ -113,6 +113,7 @@ variable "azure_transit1_region" {
 }
 
 variable "azure_transit1_name" {
+  default = "ace-azure-east-us-transit1"
 }
 
 variable "azure_transit1_cidr" {
@@ -124,6 +125,7 @@ variable "azure_spoke1_region" {
 }
 
 variable "azure_spoke1_name" {
+  default = "ace-azure-east-us-spoke1"
 }
 
 variable "azure_spoke1_cidr" {
@@ -135,19 +137,12 @@ variable "azure_spoke2_region" {
 }
 
 variable "azure_spoke2_name" {
+  default = "ace-azure-east-us-spoke2"
 }
 
 variable "azure_spoke2_cidr" {
   default = "192.168.212.0/24"
 }
-
-/* variable "azure_firewall_image" {
-  default = "Check Point CloudGuard IaaS Standalone (gateway + management) R80.40 - Bring Your Own License"
-}
-
-variable "azure_firewall_image_version" {
-  default = "8040.900294.0593"
-} */
 
 variable "insane" {
   type    = bool
@@ -187,6 +182,7 @@ variable "gcp_transit1_region" {
 }
 
 variable "gcp_transit1_name" {
+  default ="ace-gcp-us-east1-transit1"
 }
 
 variable "gcp_transit1_cidr" {
@@ -198,6 +194,7 @@ variable "gcp_spoke1_region" {
 }
 
 variable "gcp_spoke1_name" {
+  default = "ace-gcp-us-east1-spoke1"
 }
 
 variable "gcp_spoke1_cidr" {

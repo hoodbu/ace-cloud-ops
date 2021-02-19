@@ -124,9 +124,11 @@ data "aws_instance" "ace-onprem-cisco-csr" {
     values = [ "ace-onprem-cisco-csr" ]
   }
 }
+
 data "aws_route_table" "ace-onprem-cisco-rtb" {
-  provider = aws.west2
-  subnet_id = module.ace-onprem-partner1.public_subnets[0]
+  provider   = aws.west2
+  subnet_id  = module.ace-onprem-partner1.public_subnets[0]
+  depends_on = [ module.ace-onprem-partner1 ]
 }
 
 resource "aws_route" "ace-onprem-mapped-route" {
