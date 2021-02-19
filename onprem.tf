@@ -123,6 +123,7 @@ data "aws_instance" "ace-onprem-cisco-csr" {
     name   = "tag:Name"
     values = [ "ace-onprem-cisco-csr" ]
   }
+  depends_on = [ aws_instance.ace-onprem-cisco-csr ]
 }
 
 data "aws_route_table" "ace-onprem-cisco-rtb" {
