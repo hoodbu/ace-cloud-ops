@@ -14,7 +14,7 @@ resource "local_file" "avtx_priv_key" {
 
 resource "aws_key_pair" "aws_west1_key" {
   provider   = aws.west
-  key_name   = "ace_lab_west1"
+  key_name   = var.spoke1_ec2_key_name
   public_key = tls_private_key.avtx_key.public_key_openssh
 }
 

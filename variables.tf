@@ -90,7 +90,10 @@ variable "aws_test_instance_size" {
   default = "t3.micro"
 }
 
-variable "ec2_key_name" {
+variable "spoke1_ec2_key_name" {
+}
+
+variable "onprem_ec2_key_name" {
 }
 
 variable "azure_account_name" {

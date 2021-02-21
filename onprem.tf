@@ -145,7 +145,7 @@ module "ace-onprem-ubu" {
   instance_type               = var.aws_test_instance_size
   name                        = "ace-onprem-ubu"
   ami                         = data.aws_ami.ubuntu2.id
-  key_name                    = var.ec2_key_name
+  key_name                    = var.onprem_ec2_key_name
   instance_count              = 1
   subnet_id                   = module.ace-onprem-partner1.public_subnets[0]
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner1-sg.id]
