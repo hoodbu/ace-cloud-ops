@@ -102,22 +102,6 @@ module "azure_transit_1" {
   enable_segmentation    = true
 }
 
-/* module "azure_transit_1" {
-  source                 = "terraform-aviatrix-modules/azure-transit-firenet/aviatrix"
-  version                = "3.0.0"
-  account                = var.azure_account_name
-  region                 = var.azure_transit1_region
-  name                   = var.azure_transit1_name
-  cidr                   = var.azure_transit1_cidr
-  prefix                 = var.prefix
-  suffix                 = var.suffix
-  enable_segmentation    = true
-  ha_gw                  = var.ha_enabled
-  firewall_image         = var.azure_firewall_image
-  firewall_image_version = var.azure_firewall_image_version
-} */
-
-
 # Azure Spoke 1 
 module "azure_spoke_1" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
@@ -195,11 +179,11 @@ resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
 }
 
 # Multi region Multi-Cloud transit peering
-/* module "transit-peering" {
+module "transit-peering" {
   source           = "terraform-aviatrix-modules/mc-transit-peering/aviatrix"
   version          = "1.0.2"
   transit_gateways = [module.gcp_transit_1.transit_gateway.gw_name, module.azure_transit_1.transit_gateway.gw_name, module.aws_transit_1.transit_gateway.gw_name]
-} */
+}
 
  # Create an Aviatrix Site2cloud Connection
 resource "aviatrix_site2cloud" "test_s2c" {
