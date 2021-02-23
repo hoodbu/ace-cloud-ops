@@ -91,8 +91,8 @@ resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_atta
     permission_name = "all_troubleshoot_write"
 }
 
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_14" {
+/* resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_14" {
     group_name = aviatrix_rbac_group.rbac_group_100.group_name
     permission_name = "all_write"
-}
+} */
 
