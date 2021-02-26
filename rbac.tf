@@ -36,16 +36,6 @@ resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_atta
     permission_name = "all_accounts_write"
 }
 
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_3" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_gateway_write"
-}
-
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_4" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_tgw_orchestrator_write"
-}
-
 resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_5" {
     group_name = aviatrix_rbac_group.rbac_group_100.group_name
     permission_name = "all_transit_network_write"
@@ -54,31 +44,6 @@ resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_atta
 resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_6" {
     group_name = aviatrix_rbac_group.rbac_group_100.group_name
     permission_name = "all_firewall_network_write"
-}
-
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_7" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_cloud_wan_write"
-}
-
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_8" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_peering_write"
-}
-
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_9" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_site2cloud_write"
-}
-
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_10" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_openvpn_write"
-}
-
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_11" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_security_write"
 }
 
 resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_12" {
@@ -90,9 +55,3 @@ resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_atta
     group_name = aviatrix_rbac_group.rbac_group_100.group_name
     permission_name = "all_troubleshoot_write"
 }
-
-/* resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_14" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_write"
-} */
-
