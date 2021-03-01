@@ -10,19 +10,20 @@ It builds the following:
 - Aviatrix Transit in Azure with 2 spokes
 - Aviatrix Transit in GCP with 1 spoke
 - Ubuntu VMs with password authentication (1 per spoke)
-- Multi-Cloud Segmentation (2 security domains)
+- Multi-Cloud Segmentation (2 security domains, no connection policy)
 - Site2Cloud with On-Prem Cisco CSR emulated in AWS
+- Egress FQDN gateway in Azure Spoke 2
 
 <img src="topology.png">
 
 Component | Version
 --- | ---
-Aviatrix Controller | UserConnect-6.2.1955 (6.2)
-Aviatrix Terraform Provider | 2.17.1
-Terraform | 0.12
-Azure Terraform Provider | 2.30
+Aviatrix Controller | UserConnect-6.3.2216 (6.3)
+Aviatrix Terraform Provider | > 2.18.0
+Terraform | 0.13
+Azure Terraform Provider | > 2.0.0
 GCP Terraform Provider | 3.49
-AWS Terraform Provider | 3.19
+AWS Terraform Provider | > 3.0
 
 ### Dependencies
 
@@ -30,7 +31,7 @@ AWS Terraform Provider | 3.19
 - Aviatrix Controller with Access Accounts defined for AWS, Azure, and GCP
 - Sufficient limits in place for CSPs and regions in scope **_(EIPs, Compute quotas, etc.)_**
 - Active subscriptions for the NGFW firewall images in scope
-- terraform .12 in the user environment ```terraform -v```
+- terraform .13 in the user environment ```terraform -v```
 - Terraform provider requirements are met (AWS, GCP, Azure) in the runtime environment
 - Account credentials for each CSP defined in environment
 
