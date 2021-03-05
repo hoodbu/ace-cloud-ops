@@ -87,13 +87,15 @@ variable "aws_spoke2_cidr" {
 }
 
 variable "aws_test_instance_size" {
-  default = "t3.micro"
+  default = "t2.micro"
 }
 
 variable "spoke1_ec2_key_name" {
+  default = "ace-cloud-ops"
 }
 
 variable "onprem_ec2_key_name" {
+  default = "ace-cloud-ops"
 }
 
 variable "azure_account_name" {
