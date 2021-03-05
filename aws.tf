@@ -141,7 +141,7 @@ module "aws_spoke_ubu_1" {
 
 module "aws_spoke_ubu_2" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
-  instance_type               = "t2.micro"
+  instance_type               = var.aws_test_instance_size
   name                        = "${var.aws_spoke2_name}-ubu"
   ami                         = data.aws_ami.ubuntu.id
   key_name                    = var.spoke1_ec2_key_name
