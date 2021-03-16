@@ -31,21 +31,6 @@ resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_atta
     permission_name = "all_dashboard_write"
 }
 
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_2" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_accounts_write"
-}
-
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_5" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_transit_network_write"
-}
-
-resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_6" {
-    group_name = aviatrix_rbac_group.rbac_group_100.group_name
-    permission_name = "all_firewall_network_write"
-}
-
 resource "aviatrix_rbac_group_permission_attachment" "rbac_group_permission_attachment_12" {
     group_name = aviatrix_rbac_group.rbac_group_100.group_name
     permission_name = "all_useful_tools_write"

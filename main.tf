@@ -56,7 +56,7 @@ module "aws_transit_1" {
   instance_size          = var.aws_transit_instance_size
   enable_segmentation    = true
   firewall_image         = var.aws_firewall_image
-  firewall_image_version = "R80.40-294.581"
+  firewall_image_version = var.aws_firewall_image_version
 }
 
 # AWS Spoke Modules

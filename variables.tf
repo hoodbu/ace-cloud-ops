@@ -30,7 +30,6 @@ variable "suffix" {
 }
 
 variable "aws_account_name" {
-  default = ""
 }
 
 variable "aws_transit_instance_size" {
@@ -50,16 +49,12 @@ variable "aws_transit1_cidr" {
   default = "10.1.200.0/23"
 }
 
-variable "aws_transit2_region" {
-  default = "eu-west-2"
-}
-
-variable "aws_transit2_cidr" {
-  default = "10.2.200.0/23"
-}
-
 variable "aws_firewall_image" {
   default = "Check Point CloudGuard IaaS All-In-One"
+}
+
+variable "aws_firewall_image_version" {
+  default = "R80.40-294.581"
 }
 
 variable "aws_spoke1_region" {
