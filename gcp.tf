@@ -10,7 +10,7 @@ data "template_file" "gcp-init" {
 
 resource "google_compute_firewall" "gcp-comp-firewall" {
   name    = "gcp-comp-firewall"
-  network = module.gcp_spoke_1.vpc.id 
+  network = module.gcp_spoke_1.vpc.id
   allow {
     protocol = "icmp"
   }
@@ -23,7 +23,7 @@ resource "google_compute_firewall" "gcp-comp-firewall" {
 resource "google_compute_address" "gcp-spoke1-eip" {
   name         = "${var.gcp_spoke1_name}-eip"
   address_type = "EXTERNAL"
-  region = var.gcp_spoke1_region
+  region       = var.gcp_spoke1_region
 }
 
 resource "google_compute_instance" "gcp-spoke1-ubu" {

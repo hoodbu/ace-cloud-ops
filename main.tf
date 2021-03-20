@@ -42,8 +42,8 @@ resource "aviatrix_segmentation_security_domain" "orange" {
 # AWS Transit Modules
 module "aws_transit_1" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
-  source              = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
-  version             = "3.0.3"
+  source                 = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
+  version                = "3.0.3"
   account                = var.aws_account_name
   region                 = var.aws_transit1_region
   name                   = var.aws_transit1_name
@@ -90,16 +90,16 @@ module "aws_spoke_2" {
 
 # Azure Transit Module
 module "azure_transit_1" {
-  source                 = "terraform-aviatrix-modules/azure-transit/aviatrix"
-  version                = "3.0.0"
-  ha_gw                  = var.ha_enabled
-  account                = var.azure_account_name
-  region                 = var.azure_transit1_region
-  name                   = var.azure_transit1_name
-  cidr                   = var.azure_transit1_cidr
-  prefix                 = var.prefix
-  suffix                 = var.suffix
-  enable_segmentation    = true
+  source              = "terraform-aviatrix-modules/azure-transit/aviatrix"
+  version             = "3.0.0"
+  ha_gw               = var.ha_enabled
+  account             = var.azure_account_name
+  region              = var.azure_transit1_region
+  name                = var.azure_transit1_name
+  cidr                = var.azure_transit1_cidr
+  prefix              = var.prefix
+  suffix              = var.suffix
+  enable_segmentation = true
 }
 
 # Azure Spoke 1 
@@ -137,32 +137,32 @@ module "azure_spoke_2" {
 # GCP Transit Module
 module "gcp_transit_1" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-gcp-transit.git?ref=v3.0.0"
-  source                 = "terraform-aviatrix-modules/gcp-transit/aviatrix"
-  version                = "3.0.0"
-  account                = var.gcp_account_name
-  region                 = var.gcp_transit1_region
-  name                   = var.gcp_transit1_name
-  cidr                   = var.gcp_transit1_cidr
-  prefix                 = var.prefix
-  suffix                 = var.suffix
-  enable_segmentation    = true
-  ha_gw                  = var.ha_enabled
+  source              = "terraform-aviatrix-modules/gcp-transit/aviatrix"
+  version             = "3.0.0"
+  account             = var.gcp_account_name
+  region              = var.gcp_transit1_region
+  name                = var.gcp_transit1_name
+  cidr                = var.gcp_transit1_cidr
+  prefix              = var.prefix
+  suffix              = var.suffix
+  enable_segmentation = true
+  ha_gw               = var.ha_enabled
 }
 
 # Aviatrix GCP Spoke 1
 module "gcp_spoke_1" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-gcp-spoke.git?ref=v3.0.0"
-  source     = "terraform-aviatrix-modules/gcp-spoke/aviatrix"
-  version    = "3.0.0"
-  account    = var.gcp_account_name
-  region     = var.gcp_spoke1_region
-  name       = var.gcp_spoke1_name
-  cidr       = var.gcp_spoke1_cidr
-  prefix     = var.prefix
-  suffix     = var.suffix
-  ha_gw      = var.ha_enabled
+  source          = "terraform-aviatrix-modules/gcp-spoke/aviatrix"
+  version         = "3.0.0"
+  account         = var.gcp_account_name
+  region          = var.gcp_spoke1_region
+  name            = var.gcp_spoke1_name
+  cidr            = var.gcp_spoke1_cidr
+  prefix          = var.prefix
+  suffix          = var.suffix
+  ha_gw           = var.ha_enabled
   security_domain = aviatrix_segmentation_security_domain.orange.domain_name
-  transit_gw = module.gcp_transit_1.transit_gateway.gw_name
+  transit_gw      = module.gcp_transit_1.transit_gateway.gw_name
 }
 
 # Create another Gateway in the Azure Spoke for Egress FQDN (later on)
@@ -175,7 +175,7 @@ resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
   gw_size      = var.azure_spoke_instance_size
   # subnet       = var.azure_spoke2_cidr
   # subnet       = module.azure_spoke_2.vnet.public_subnets[0].name
-  subnet       = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  subnet = module.azure_spoke_2.vnet.public_subnets[0].cidr
 }
 
 # Multi region Multi-Cloud transit peering
@@ -185,21 +185,21 @@ module "transit-peering" {
   transit_gateways = [module.gcp_transit_1.transit_gateway.gw_name, module.azure_transit_1.transit_gateway.gw_name, module.aws_transit_1.transit_gateway.gw_name]
 }
 
- # Create an Aviatrix Site2cloud Connection
+# Create an Aviatrix Site2cloud Connection
 resource "aviatrix_site2cloud" "test_s2c" {
-  vpc_id                           = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
-  connection_name                  = "ACE-LONDON-BRANCH"
-  connection_type                  = "mapped"
-  remote_gateway_type              = "generic"
-  tunnel_type                      = "route"
+  vpc_id              = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
+  connection_name     = "ACE-LONDON-BRANCH"
+  connection_type     = "mapped"
+  remote_gateway_type = "generic"
+  tunnel_type         = "route"
   # primary_cloud_gateway_name       = "ace-gcp-us-east1-spoke1"
-  primary_cloud_gateway_name       = module.gcp_spoke_1.vpc.name
-  remote_gateway_ip                = aws_instance.ace-onprem-cisco-csr.public_ip
-  pre_shared_key                   = var.ace_password
-  local_subnet_cidr                = "172.16.211.0/24"
-  local_subnet_virtual             = "192.168.1.0/24"
-  remote_subnet_cidr               = "172.16.211.0/24"
-  remote_subnet_virtual            = "192.168.2.0/24"
+  primary_cloud_gateway_name = module.gcp_spoke_1.vpc.name
+  remote_gateway_ip          = aws_instance.ace-onprem-cisco-csr.public_ip
+  pre_shared_key             = var.ace_password
+  local_subnet_cidr          = "172.16.211.0/24"
+  local_subnet_virtual       = "192.168.1.0/24"
+  remote_subnet_cidr         = "172.16.211.0/24"
+  remote_subnet_virtual      = "192.168.2.0/24"
 }
 
 # Create an Aviatrix Gateway FQDN filter

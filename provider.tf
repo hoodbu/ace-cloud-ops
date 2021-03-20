@@ -13,8 +13,8 @@ provider "azurerm" {
 }
 
 provider "google" {
-  project     = var.account_name_in_gcp
-  region      = "us-east1"
+  project = var.account_name_in_gcp
+  region  = "us-east1"
 }
 
 provider "aws" {

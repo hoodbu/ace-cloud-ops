@@ -8,9 +8,9 @@ data "template_file" "azure-spoke1-init" {
 
 # Spoke Ubuntu VM 1
 resource "azurerm_network_interface" "main" {
-  name                 = "${var.azure_spoke1_name}-nic1"
-  resource_group_name  = module.azure_spoke_1.vnet.resource_group
-  location             = var.azure_spoke1_region
+  name                = "${var.azure_spoke1_name}-nic1"
+  resource_group_name = module.azure_spoke_1.vnet.resource_group
+  location            = var.azure_spoke1_region
   ip_configuration {
     name                          = module.azure_spoke_1.vnet.private_subnets[0].name
     subnet_id                     = module.azure_spoke_1.vnet.private_subnets[0].subnet_id
@@ -20,49 +20,49 @@ resource "azurerm_network_interface" "main" {
 
 resource "azurerm_network_security_group" "spoke1-ubu" {
   name                = "spoke1-ubu"
-  resource_group_name  = module.azure_spoke_1.vnet.resource_group
-  location             = var.azure_spoke1_region
+  resource_group_name = module.azure_spoke_1.vnet.resource_group
+  location            = var.azure_spoke1_region
 }
 
 resource "azurerm_network_security_rule" "http" {
-  access                     = "Allow"
-  direction                  = "Inbound"
-  name                       = "http"
-  priority                   = 100
-  protocol                   = "Tcp"
-  source_port_range          = "*"
-  source_address_prefix      = "*"
-  destination_port_range     = "80"
-  destination_address_prefix = "*"
-  resource_group_name        = module.azure_spoke_1.vnet.resource_group
+  access                      = "Allow"
+  direction                   = "Inbound"
+  name                        = "http"
+  priority                    = 100
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  source_address_prefix       = "*"
+  destination_port_range      = "80"
+  destination_address_prefix  = "*"
+  resource_group_name         = module.azure_spoke_1.vnet.resource_group
   network_security_group_name = azurerm_network_security_group.spoke1-ubu.name
 }
 
 resource "azurerm_network_security_rule" "ssh" {
-  access                     = "Allow"
-  direction                  = "Inbound"
-  name                       = "ssh"
-  priority                   = 110
-  protocol                   = "Tcp"
-  source_port_range          = "*"
-  source_address_prefix      = "*"
-  destination_port_range     = "22"
-  destination_address_prefix = "*"
-  resource_group_name        = module.azure_spoke_1.vnet.resource_group
+  access                      = "Allow"
+  direction                   = "Inbound"
+  name                        = "ssh"
+  priority                    = 110
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  source_address_prefix       = "*"
+  destination_port_range      = "22"
+  destination_address_prefix  = "*"
+  resource_group_name         = module.azure_spoke_1.vnet.resource_group
   network_security_group_name = azurerm_network_security_group.spoke1-ubu.name
 }
 
 resource "azurerm_network_security_rule" "icmp" {
-  access                     = "Allow"
-  direction                  = "Inbound"
-  name                       = "icmp"
-  priority                   = 120
-  protocol                   = "Icmp"
-  source_port_range          = "*"
-  source_address_prefix      = "*"
-  destination_port_range     = "*"
-  destination_address_prefix = "*"
-  resource_group_name        = module.azure_spoke_1.vnet.resource_group
+  access                      = "Allow"
+  direction                   = "Inbound"
+  name                        = "icmp"
+  priority                    = 120
+  protocol                    = "Icmp"
+  source_port_range           = "*"
+  source_address_prefix       = "*"
+  destination_port_range      = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = module.azure_spoke_1.vnet.resource_group
   network_security_group_name = azurerm_network_security_group.spoke1-ubu.name
 }
 
@@ -111,9 +111,9 @@ data "template_file" "azure-spoke2-init" {
 }
 
 resource "azurerm_network_interface" "main2" {
-  name                 = "${var.azure_spoke2_name}-nic1"
-  resource_group_name  = module.azure_spoke_2.vnet.resource_group
-  location             = var.azure_spoke2_region
+  name                = "${var.azure_spoke2_name}-nic1"
+  resource_group_name = module.azure_spoke_2.vnet.resource_group
+  location            = var.azure_spoke2_region
   ip_configuration {
     name                          = module.azure_spoke_2.vnet.private_subnets[0].name
     subnet_id                     = module.azure_spoke_2.vnet.private_subnets[0].subnet_id
@@ -123,49 +123,49 @@ resource "azurerm_network_interface" "main2" {
 
 resource "azurerm_network_security_group" "spoke2-ubu" {
   name                = "spoke2-ubu"
-  resource_group_name  = module.azure_spoke_2.vnet.resource_group
-  location             = var.azure_spoke2_region
+  resource_group_name = module.azure_spoke_2.vnet.resource_group
+  location            = var.azure_spoke2_region
 }
 
 resource "azurerm_network_security_rule" "http2" {
-  access                     = "Allow"
-  direction                  = "Inbound"
-  name                       = "http"
-  priority                   = 100
-  protocol                   = "Tcp"
-  source_port_range          = "*"
-  source_address_prefix      = "*"
-  destination_port_range     = "80"
-  destination_address_prefix = "*"
-  resource_group_name        = module.azure_spoke_2.vnet.resource_group
+  access                      = "Allow"
+  direction                   = "Inbound"
+  name                        = "http"
+  priority                    = 100
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  source_address_prefix       = "*"
+  destination_port_range      = "80"
+  destination_address_prefix  = "*"
+  resource_group_name         = module.azure_spoke_2.vnet.resource_group
   network_security_group_name = azurerm_network_security_group.spoke2-ubu.name
 }
 
 resource "azurerm_network_security_rule" "ssh2" {
-  access                     = "Allow"
-  direction                  = "Inbound"
-  name                       = "ssh"
-  priority                   = 110
-  protocol                   = "Tcp"
-  source_port_range          = "*"
-  source_address_prefix      = "*"
-  destination_port_range     = "22"
-  destination_address_prefix = "*"
-  resource_group_name        = module.azure_spoke_2.vnet.resource_group
+  access                      = "Allow"
+  direction                   = "Inbound"
+  name                        = "ssh"
+  priority                    = 110
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  source_address_prefix       = "*"
+  destination_port_range      = "22"
+  destination_address_prefix  = "*"
+  resource_group_name         = module.azure_spoke_2.vnet.resource_group
   network_security_group_name = azurerm_network_security_group.spoke2-ubu.name
 }
 
 resource "azurerm_network_security_rule" "icmp2" {
-  access                     = "Allow"
-  direction                  = "Inbound"
-  name                       = "icmp"
-  priority                   = 120
-  protocol                   = "Icmp"
-  source_port_range          = "*"
-  source_address_prefix      = "*"
-  destination_port_range     = "*"
-  destination_address_prefix = "*"
-  resource_group_name        = module.azure_spoke_2.vnet.resource_group
+  access                      = "Allow"
+  direction                   = "Inbound"
+  name                        = "icmp"
+  priority                    = 120
+  protocol                    = "Icmp"
+  source_port_range           = "*"
+  source_address_prefix       = "*"
+  destination_port_range      = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = module.azure_spoke_2.vnet.resource_group
   network_security_group_name = azurerm_network_security_group.spoke2-ubu.name
 }
 

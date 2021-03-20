@@ -2,7 +2,7 @@
 # Data source to get AMI details
 ##################################################################
 data "aws_ami" "ubuntu" {
-  provider = aws.west
+  provider    = aws.west
   most_recent = true
   filter {
     name   = "name"
@@ -16,7 +16,7 @@ data "aws_ami" "ubuntu" {
 }
 
 data "aws_ami" "ubuntu2" {
-  provider = aws.west2
+  provider    = aws.west2
   most_recent = true
   filter {
     name   = "name"
@@ -30,9 +30,9 @@ data "aws_ami" "ubuntu2" {
 }
 
 data "aws_ami" "amazon_linux" {
-  provider = aws.west
+  provider    = aws.west
   most_recent = true
-  owners = ["amazon"]
+  owners      = ["amazon"]
   filter {
     name = "name"
     values = [
@@ -48,9 +48,9 @@ data "aws_ami" "amazon_linux" {
 }
 
 data "aws_ami" "amazon_linux_west2" {
-  provider = aws.west2
+  provider    = aws.west2
   most_recent = true
-  owners = ["amazon"]
+  owners      = ["amazon"]
   filter {
     name = "name"
     values = [
@@ -96,11 +96,11 @@ EOF
 }
 
 module "security_group_1" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 3.0"
-  name        = "security_group_spoke1"
-  description = "Security group for example usage with EC2 instance"
-  vpc_id      = module.aws_spoke_1.vpc.vpc_id
+  source              = "terraform-aws-modules/security-group/aws"
+  version             = "~> 3.0"
+  name                = "security_group_spoke1"
+  description         = "Security group for example usage with EC2 instance"
+  vpc_id              = module.aws_spoke_1.vpc.vpc_id
   ingress_cidr_blocks = ["0.0.0.0/0"]
   ingress_rules       = ["http-80-tcp", "ssh-tcp", "all-icmp"]
   egress_rules        = ["all-all"]
@@ -110,11 +110,11 @@ module "security_group_1" {
 }
 
 module "security_group_2" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 3.0"
-  name        = "security_group_spoke2"
-  description = "Security group for example usage with EC2 instance"
-  vpc_id      = module.aws_spoke_2.vpc.vpc_id
+  source              = "terraform-aws-modules/security-group/aws"
+  version             = "~> 3.0"
+  name                = "security_group_spoke2"
+  description         = "Security group for example usage with EC2 instance"
+  vpc_id              = module.aws_spoke_2.vpc.vpc_id
   ingress_cidr_blocks = ["0.0.0.0/0"]
   ingress_rules       = ["http-80-tcp", "ssh-tcp", "all-icmp"]
   egress_rules        = ["all-all"]
@@ -134,7 +134,7 @@ module "aws_spoke_ubu_1" {
   vpc_security_group_ids      = [module.security_group_1.this_security_group_id]
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.bu1_frontend_user_data)
-  providers                   = {
+  providers = {
     aws = aws.west
   }
 }
@@ -150,7 +150,7 @@ module "aws_spoke_ubu_2" {
   vpc_security_group_ids      = [module.security_group_2.this_security_group_id]
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.bu2_mobile_app_user_data)
-  providers                   = {
+  providers = {
     aws = aws.west
   }
 }

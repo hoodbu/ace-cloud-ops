@@ -61,7 +61,7 @@ resource "aws_security_group" "ace-onprem-partner1-sg" {
     from_port   = 0
     to_port     = 0
     protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]   
+    cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
     Name = "ace-onprem-partner1-sg"
@@ -69,7 +69,7 @@ resource "aws_security_group" "ace-onprem-partner1-sg" {
 }
 
 resource "aws_instance" "ace-onprem-cisco-csr" {
-  provider                    = aws.west2
+  provider = aws.west2
   # Find an AMI by deploying manually from the Console first
   ami                         = "ami-05fecfb63c095734c"
   instance_type               = "t2.medium"
@@ -78,7 +78,7 @@ resource "aws_instance" "ace-onprem-cisco-csr" {
   source_dest_check           = false
   key_name                    = aws_key_pair.aws_west2_key.key_name
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner1-sg.id]
-  user_data = <<EOF
+  user_data                   = <<EOF
     ios-config-100 = "username admin privilege 15 password ${var.ace_password}"
     ios-config-104 = "hostname OnPrem-Partner1"
     ios-config-1010 = "crypto keyring OnPrem-Aviatrix"
@@ -122,15 +122,15 @@ data "aws_instance" "ace-onprem-cisco-csr" {
   provider = aws.west2
   filter {
     name   = "tag:Name"
-    values = [ "ace-onprem-cisco-csr" ]
+    values = ["ace-onprem-cisco-csr"]
   }
-  depends_on = [ aws_instance.ace-onprem-cisco-csr ]
+  depends_on = [aws_instance.ace-onprem-cisco-csr]
 }
 
 data "aws_route_table" "ace-onprem-cisco-rtb" {
   provider   = aws.west2
   subnet_id  = module.ace-onprem-partner1.public_subnets[0]
-  depends_on = [ module.ace-onprem-partner1 ]
+  depends_on = [module.ace-onprem-partner1]
 }
 
 resource "aws_route" "ace-onprem-mapped-route" {
@@ -138,7 +138,7 @@ resource "aws_route" "ace-onprem-mapped-route" {
   route_table_id         = data.aws_route_table.ace-onprem-cisco-rtb.id
   destination_cidr_block = "192.168.1.0/24"
   network_interface_id   = data.aws_instance.ace-onprem-cisco-csr.network_interface_id
-  depends_on             = [ module.ace-onprem-partner1, aws_instance.ace-onprem-cisco-csr ]
+  depends_on             = [module.ace-onprem-partner1, aws_instance.ace-onprem-cisco-csr]
 }
 
 module "ace-onprem-ubu" {
@@ -152,7 +152,7 @@ module "ace-onprem-ubu" {
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner1-sg.id]
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.onprem_user_data)
-  providers                   = {
+  providers = {
     aws = aws.west2
   }
 }

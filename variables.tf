@@ -4,19 +4,19 @@ variable "username" {
 }
 
 variable "password" {
-  type    = string
+  type = string
 }
 
 variable "controller_ip" {
-  type    = string
+  type = string
 }
 
 variable "ace_email" {
-  type    = string
+  type = string
 }
 
 variable "ace_password" {
-  type    = string
+  type = string
 }
 
 variable "prefix" {
@@ -182,7 +182,7 @@ variable "gcp_transit1_region" {
 }
 
 variable "gcp_transit1_name" {
-  default ="ace-gcp-us-east1-transit1"
+  default = "ace-gcp-us-east1-transit1"
 }
 
 variable "gcp_transit1_cidr" {
