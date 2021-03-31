@@ -18,7 +18,7 @@ It builds the following:
 
 Component | Version
 --- | ---
-Aviatrix Controller | UserConnect-6.3.2216 (6.3)
+Aviatrix Controller | UserConnect-6.3.2364 (6.3)
 Aviatrix Terraform Provider | > 2.18.0
 Terraform | 0.13
 Azure Terraform Provider | > 2.0.0
