@@ -15,10 +15,10 @@ sudo echo "<html><h1>Aviatrix is awesome</h1></html>" > /var/www/html/index.html
 EOF
 }
 
-module "ace-onprem-partner1" {
+module "ace-onprem-partner" {
   providers      = { aws = aws.west2 }
   source         = "terraform-aws-modules/vpc/aws"
-  name           = "ace-onprem-partner1"
+  name           = "ace-onprem-partner"
   cidr           = "172.16.211.0/24"
   azs            = ["eu-west-2a"]
   public_subnets = ["172.16.211.0/24"]
@@ -29,10 +29,10 @@ module "ace-onprem-partner1" {
   }
 }
 
-resource "aws_security_group" "ace-onprem-partner1-sg" {
+resource "aws_security_group" "ace-onprem-partner-sg" {
   provider = aws.west2
-  name     = "ace-onprem-partner1-sg"
-  vpc_id   = module.ace-onprem-partner1.vpc_id
+  name     = "ace-onprem-partner-sg"
+  vpc_id   = module.ace-onprem-partner.vpc_id
   ingress {
     from_port   = 22
     to_port     = 22
@@ -64,23 +64,23 @@ resource "aws_security_group" "ace-onprem-partner1-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "ace-onprem-partner1-sg"
+    Name = "ace-onprem-partner-sg"
   }
 }
 
-resource "aws_instance" "ace-onprem-cisco-csr" {
+resource "aws_instance" "ace-onprem-partner-csr" {
   provider = aws.west2
   # Find an AMI by deploying manually from the Console first
   ami                         = "ami-05fecfb63c095734c"
   instance_type               = "t2.medium"
-  subnet_id                   = module.ace-onprem-partner1.public_subnets[0]
+  subnet_id                   = module.ace-onprem-partner.public_subnets[0]
   associate_public_ip_address = true
   source_dest_check           = false
   key_name                    = aws_key_pair.aws_west2_key.key_name
-  vpc_security_group_ids      = [aws_security_group.ace-onprem-partner1-sg.id]
+  vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
   user_data                   = <<EOF
     ios-config-100 = "username admin privilege 15 password ${var.ace_password}"
-    ios-config-104 = "hostname OnPrem-Partner1"
+    ios-config-104 = "hostname OnPrem-Partner"
     ios-config-1010 = "crypto keyring OnPrem-Aviatrix"
     ios-config-1020 = "pre-shared-key address ${module.gcp_spoke_1.spoke_gateway.eip} key ${var.ace_password}"
     ios-config-1030 = "crypto isakmp policy 1"
@@ -114,31 +114,31 @@ resource "aws_instance" "ace-onprem-cisco-csr" {
     ios-config-1310 = "write memory"
   EOF
   tags = {
-    Name = "ace-onprem-cisco-csr"
+    Name = "ace-onprem-partner-csr"
   }
 }
 
-data "aws_instance" "ace-onprem-cisco-csr" {
+data "aws_instance" "ace-onprem-partner-csr" {
   provider = aws.west2
   filter {
     name   = "tag:Name"
-    values = ["ace-onprem-cisco-csr"]
+    values = ["ace-onprem-partner-csr"]
   }
-  depends_on = [aws_instance.ace-onprem-cisco-csr]
+  depends_on = [aws_instance.ace-onprem-partner-csr]
 }
 
-data "aws_route_table" "ace-onprem-cisco-rtb" {
+data "aws_route_table" "ace-onprem-partner-rtb" {
   provider   = aws.west2
-  subnet_id  = module.ace-onprem-partner1.public_subnets[0]
-  depends_on = [module.ace-onprem-partner1]
+  subnet_id  = module.ace-onprem-partner.public_subnets[0]
+  depends_on = [module.ace-onprem-partner]
 }
 
 resource "aws_route" "ace-onprem-mapped-route" {
   provider               = aws.west2
-  route_table_id         = data.aws_route_table.ace-onprem-cisco-rtb.id
+  route_table_id         = data.aws_route_table.ace-onprem-partner-rtb.id
   destination_cidr_block = "192.168.1.0/24"
-  network_interface_id   = data.aws_instance.ace-onprem-cisco-csr.network_interface_id
-  depends_on             = [module.ace-onprem-partner1, aws_instance.ace-onprem-cisco-csr]
+  network_interface_id   = data.aws_instance.ace-onprem-partner-csr.network_interface_id
+  depends_on             = [module.ace-onprem-partner, aws_instance.ace-onprem-partner-csr]
 }
 
 module "ace-onprem-ubu" {
@@ -148,8 +148,8 @@ module "ace-onprem-ubu" {
   ami                         = data.aws_ami.ubuntu2.id
   key_name                    = var.onprem_ec2_key_name
   instance_count              = 1
-  subnet_id                   = module.ace-onprem-partner1.public_subnets[0]
-  vpc_security_group_ids      = [aws_security_group.ace-onprem-partner1-sg.id]
+  subnet_id                   = module.ace-onprem-partner.public_subnets[0]
+  vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.onprem_user_data)
   providers = {
@@ -158,11 +158,11 @@ module "ace-onprem-ubu" {
 }
 
 output "aws_onprem_csr_public_ip" {
-  value = aws_instance.ace-onprem-cisco-csr.public_ip
+  value = aws_instance.ace-onprem-partner-csr.public_ip
 }
 
 output "aws_onprem_csr_private_ip" {
-  value = aws_instance.ace-onprem-cisco-csr.private_ip
+  value = aws_instance.ace-onprem-partner-csr.private_ip
 }
 
 output "aws_onprem_ubu_public_ip" {
