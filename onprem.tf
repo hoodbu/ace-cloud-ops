@@ -101,7 +101,7 @@ resource "aws_instance" "ace-onprem-partner-csr" {
     ios-config-1170 = "set transform-set OnPrem-Partner-Aviatrix"
     ios-config-1180 = "set pfs group14"
     ios-config-1190 = "set isakmp-profile OnPrem-Partner-Aviatrix"
-    ios-config-1200 = "interface Tunnel1
+    ios-config-1200 = "interface Tunnel1"
     ios-config-1210 = "ip address 169.255.0.1 255.255.255.255"
     ios-config-1220 = "ip mtu 1436"
     ios-config-1230 = "ip tcp adjust-mss 1387"
@@ -263,7 +263,7 @@ resource "aws_instance" "ace-onprem-dc-csr" {
     ios-config-1170 = "set transform-set OnPrem-DC-Aviatrix"
     ios-config-1180 = "set pfs group14"
     ios-config-1190 = "set isakmp-profile OnPrem-DC-Aviatrix"
-    ios-config-1200 = "interface Tunnel1
+    ios-config-1200 = "interface Tunnel1"
     ios-config-1210 = "ip address 169.254.74.129 255.255.255.252"
     ios-config-1220 = "ip mtu 1436"
     ios-config-1230 = "ip tcp adjust-mss 1387"
