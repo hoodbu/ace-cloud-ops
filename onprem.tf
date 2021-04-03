@@ -296,6 +296,22 @@ resource "aws_instance" "ace-onprem-dc-csr" {
   }
 }
 
+module "ace-onprem-dc-ubu" {
+  source                      = "terraform-aws-modules/ec2-instance/aws"
+  instance_type               = var.aws_test_instance_size
+  name                        = "ace-onprem-dc-ubu"
+  ami                         = data.aws_ami.ubuntu2.id
+  key_name                    = var.onprem_ec2_key_name
+  instance_count              = 1
+  subnet_id                   = module.ace-onprem-dc-vpc.public_subnets[0]
+  vpc_security_group_ids      = [aws_security_group.ace-onprem-dc-sg.id]
+  associate_public_ip_address = true
+  user_data_base64            = base64encode(local.onprem_user_data)
+  providers = {
+    aws = aws.west2
+  }
+}
+
 output "onprem_dc_csr_public_ip" {
   value = aws_instance.ace-onprem-dc-csr.public_ip
 }
