@@ -157,26 +157,26 @@ module "ace-onprem-ubu" {
   }
 }
 
-output "aws_onprem_csr_public_ip" {
+output "onprem_partner_csr_public_ip" {
   value = aws_instance.ace-onprem-partner-csr.public_ip
 }
 
-output "aws_onprem_csr_private_ip" {
+output "onprem_partner_csr_private_ip" {
   value = aws_instance.ace-onprem-partner-csr.private_ip
 }
 
-output "aws_onprem_ubu_public_ip" {
+output "onprem_ubu_public_ip" {
   value = module.ace-onprem-ubu.public_ip
 }
 
-output "aws_onprem_ubu_private_ip" {
+output "onprem_ubu_private_ip" {
   value = module.ace-onprem-ubu.private_ip
 }
 
 
 #############################################################################
 
-/* module "ace-onprem-dc-vpc" {
+module "ace-onprem-dc-vpc" {
   providers      = { aws = aws.west2 }
   source         = "terraform-aws-modules/vpc/aws"
   name           = "ace-onprem-dc-vpc"
@@ -301,4 +301,3 @@ output "onprem_dc_csr_public_ip" {
 output "onprem_dc_csr_private_ip" {
   value = aws_instance.ace-onprem-dc-csr.private_ip
 }
- */
