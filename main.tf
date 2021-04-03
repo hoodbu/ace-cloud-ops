@@ -247,6 +247,7 @@ output "firewall_public_ip" {
 
 ########################################################################
 
+/*
 resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
     vpc_id = module.aws_transit_1.vpc.vpc_id
     connection_name = "ACE-ONPREM-DC"
@@ -261,3 +262,4 @@ resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
     remote_tunnel_cidr = "169.254.74.129/30"
     custom_algorithms = false
 }
+*/
