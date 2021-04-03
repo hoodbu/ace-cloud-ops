@@ -186,13 +186,12 @@ module "transit-peering" {
 }
 
 # Create an Aviatrix Site2cloud Connection
-resource "aviatrix_site2cloud" "test_s2c" {
+resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   vpc_id              = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
-  connection_name     = "ACE-LONDON-BRANCH"
+  connection_name     = "ACE-CALL-CENTER"
   connection_type     = "mapped"
   remote_gateway_type = "generic"
   tunnel_type         = "route"
-  # primary_cloud_gateway_name       = "ace-gcp-us-east1-spoke1"
   primary_cloud_gateway_name = module.gcp_spoke_1.vpc.name
   remote_gateway_ip          = aws_instance.ace-onprem-partner-csr.public_ip
   pre_shared_key             = var.ace_password
@@ -242,3 +241,23 @@ output "firewall_public_ip" {
 /* output "SPOKE2_VNET" {
   value = module.azure_spoke_2.vnet
 } */
+
+
+
+
+########################################################################
+
+resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
+    vpc_id = module.aws_transit_1.vpc.vpc_id
+    connection_name = "ACE-ONPREM-DC"
+    gw_name = module.aws_transit_1.vpc.name
+    remote_gateway_ip = aws_instance.ace-onprem-dc-csr.public_ip
+    connection_type = "bgp"
+    direct_connect = false
+    bgp_local_as_num = "65011"
+    bgp_remote_as_num = "65012"
+    ha_enabled = false
+    local_tunnel_cidr = "169.254.74.130/30"
+    remote_tunnel_cidr = "169.254.74.129/30"
+    custom_algorithms = false
+}
