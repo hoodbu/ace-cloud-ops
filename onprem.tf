@@ -274,9 +274,9 @@ resource "aws_instance" "ace-onprem-dc-csr" {
     ios-config-1260 = "tunnel destination ${module.aws_transit_1.transit_gateway.eip}"
     ios-config-1270 = "tunnel protection ipsec profile OnPrem-DC-Aviatrix"
     ios-config-1280 = "ip virtual-reassembly"
-    ios-config-1300 = "router bgp 65001"
+    ios-config-1300 = "router bgp 65012"
     ios-config-1310 = "bgp log-neighbor-changes"
-    ios-config-1320 = "neighbor 169.254.74.130 remote-as 65000"
+    ios-config-1320 = "neighbor 169.254.74.130 remote-as 65011"
     ios-config-1330 = "neighbor 169.254.74.130 timers 10 30 30"
     ios-config-1340 = "address-family ipv4"
     ios-config-1350 = "redistribute connected"
@@ -297,9 +297,9 @@ resource "aws_instance" "ace-onprem-dc-csr" {
 }
 
 /* 
-    ios-config-1300 = "router bgp 65001"
+    ios-config-1300 = "router bgp 65012"
     ios-config-1310 = "bgp log-neighbor-changes"
-    ios-config-1320 = "neighbor 169.254.74.130 remote-as 65000"
+    ios-config-1320 = "neighbor 169.254.74.130 remote-as 65011"
     ios-config-1330 = "neighbor 169.254.74.130 timers 10 30 30"
     ios-config-1340 = "address-family ipv4"
     ios-config-1350 = "redistribute connected"

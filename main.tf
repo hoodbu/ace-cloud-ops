@@ -252,7 +252,7 @@ resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
     connection_name = "ACE-ONPREM-DC"
     gw_name = module.aws_transit_1.vpc.name
     remote_gateway_ip = aws_instance.ace-onprem-dc-csr.public_ip
-    pre_shared_key             = var.ace_password
+    pre_shared_key = var.ace_password
     connection_type = "bgp"
     direct_connect = false
     bgp_local_as_num = "65011"
