@@ -193,7 +193,7 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   remote_gateway_type = "generic"
   tunnel_type         = "route"
   primary_cloud_gateway_name = module.gcp_spoke_1.vpc.name
-  remote_gateway_ip          = aws_instance.ace-onprem-cisco-csr.public_ip
+  remote_gateway_ip          = aws_instance.ace-onprem-partner-csr.public_ip
   pre_shared_key             = var.ace_password
   local_subnet_cidr          = "172.16.211.0/24"
   local_subnet_virtual       = "192.168.1.0/24"
