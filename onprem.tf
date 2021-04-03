@@ -71,7 +71,8 @@ resource "aws_security_group" "ace-onprem-partner-sg" {
 resource "aws_instance" "ace-onprem-partner-csr" {
   provider = aws.west2
   # Find an AMI by deploying manually from the Console first
-  ami                         = "ami-05fecfb63c095734c"
+  # ami                         = "ami-05fecfb63c095734c"
+  ami                         = "ami-011222f8fd462cc0c"
   instance_type               = "t2.medium"
   subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
   associate_public_ip_address = true
@@ -232,7 +233,8 @@ resource "aws_security_group" "ace-onprem-dc-sg" {
 resource "aws_instance" "ace-onprem-dc-csr" {
   provider = aws.west2
   # Find an AMI by deploying manually from the Console first
-  ami                         = "ami-05fecfb63c095734c"
+  # ami                         = "ami-05fecfb63c095734c"
+  ami                         = "ami-011222f8fd462cc0c"
   instance_type               = "t2.medium"
   subnet_id                   = module.ace-onprem-dc-vpc.public_subnets[0]
   associate_public_ip_address = true
