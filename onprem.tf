@@ -347,6 +347,7 @@ resource "aws_instance" "ace-onprem-dc-csr" {
     Name = "ace-onprem-dc-csr"
   }
 }
+*/
 
 output "onprem_dc_csr_public_ip" {
   value = aws_instance.ace-onprem-dc-csr.public_ip
@@ -355,4 +356,3 @@ output "onprem_dc_csr_public_ip" {
 output "onprem_dc_csr_private_ip" {
   value = aws_instance.ace-onprem-dc-csr.private_ip
 }
-*/
