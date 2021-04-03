@@ -15,10 +15,10 @@ sudo echo "<html><h1>Aviatrix is awesome</h1></html>" > /var/www/html/index.html
 EOF
 }
 
-module "ace-onprem-partner" {
+module "ace-onprem-partner-vpc" {
   providers      = { aws = aws.west2 }
   source         = "terraform-aws-modules/vpc/aws"
-  name           = "ace-onprem-partner"
+  name           = "ace-onprem-partner-vpc"
   cidr           = "172.16.211.0/24"
   azs            = ["eu-west-2a"]
   public_subnets = ["172.16.211.0/24"]
@@ -32,7 +32,7 @@ module "ace-onprem-partner" {
 resource "aws_security_group" "ace-onprem-partner-sg" {
   provider = aws.west2
   name     = "ace-onprem-partner-sg"
-  vpc_id   = module.ace-onprem-partner.vpc_id
+  vpc_id   = module.ace-onprem-partner-vpc.vpc_id
   ingress {
     from_port   = 22
     to_port     = 22
@@ -73,7 +73,7 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   # Find an AMI by deploying manually from the Console first
   ami                         = "ami-05fecfb63c095734c"
   instance_type               = "t2.medium"
-  subnet_id                   = module.ace-onprem-partner.public_subnets[0]
+  subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
   associate_public_ip_address = true
   source_dest_check           = false
   key_name                    = aws_key_pair.aws_west2_key.key_name
@@ -129,8 +129,8 @@ data "aws_instance" "ace-onprem-partner-csr" {
 
 data "aws_route_table" "ace-onprem-partner-rtb" {
   provider   = aws.west2
-  subnet_id  = module.ace-onprem-partner.public_subnets[0]
-  depends_on = [module.ace-onprem-partner]
+  subnet_id  = module.ace-onprem-partner-vpc.public_subnets[0]
+  depends_on = [module.ace-onprem-partner-vpc]
 }
 
 resource "aws_route" "ace-onprem-mapped-route" {
@@ -138,7 +138,7 @@ resource "aws_route" "ace-onprem-mapped-route" {
   route_table_id         = data.aws_route_table.ace-onprem-partner-rtb.id
   destination_cidr_block = "192.168.1.0/24"
   network_interface_id   = data.aws_instance.ace-onprem-partner-csr.network_interface_id
-  depends_on             = [module.ace-onprem-partner, aws_instance.ace-onprem-partner-csr]
+  depends_on             = [module.ace-onprem-partner-vpc, aws_instance.ace-onprem-partner-csr]
 }
 
 module "ace-onprem-ubu" {
@@ -148,7 +148,7 @@ module "ace-onprem-ubu" {
   ami                         = data.aws_ami.ubuntu2.id
   key_name                    = var.onprem_ec2_key_name
   instance_count              = 1
-  subnet_id                   = module.ace-onprem-partner.public_subnets[0]
+  subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.onprem_user_data)
@@ -176,10 +176,10 @@ output "onprem_partner_ubu_private_ip" {
 
 #############################################################################
 
-module "ace-onprem-dc" {
+module "ace-onprem-dc-vpc" {
   providers      = { aws = aws.west2 }
   source         = "terraform-aws-modules/vpc/aws"
-  name           = "ace-onprem-dc"
+  name           = "ace-onprem-dc-vpc"
   cidr           = "10.0.0.0/24"
   azs            = ["eu-west-2a"]
   public_subnets = ["10.0.0.0/24"]
@@ -193,7 +193,7 @@ module "ace-onprem-dc" {
 resource "aws_security_group" "ace-onprem-dc-sg" {
   provider = aws.west2
   name     = "ace-onprem-dc-sg"
-  vpc_id   = module.ace-onprem-dc.vpc_id
+  vpc_id   = module.ace-onprem-dc-vpc.vpc_id
   ingress {
     from_port   = 22
     to_port     = 22
@@ -234,7 +234,7 @@ resource "aws_instance" "ace-onprem-dc-csr" {
   # Find an AMI by deploying manually from the Console first
   ami                         = "ami-05fecfb63c095734c"
   instance_type               = "t2.medium"
-  subnet_id                   = module.ace-onprem-dc.public_subnets[0]
+  subnet_id                   = module.ace-onprem-dc-vpc.public_subnets[0]
   associate_public_ip_address = true
   source_dest_check           = false
   key_name                    = aws_key_pair.aws_west2_key.key_name
