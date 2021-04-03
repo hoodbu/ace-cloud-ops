@@ -243,6 +243,27 @@ resource "aws_instance" "ace-onprem-dc-csr" {
   vpc_security_group_ids      = [aws_security_group.ace-onprem-dc-sg.id]
   user_data                   = <<EOF
     ios-config-100 = "username admin privilege 15 password ${var.ace_password}"
+    ios-config-1600 = "write memory"
+  EOF
+  tags = {
+    Name = "ace-onprem-dc-csr"
+  }
+}
+
+/* 
+resource "aws_instance" "ace-onprem-dc-csr" {
+  provider = aws.west2
+  # Find an AMI by deploying manually from the Console first
+  # ami                         = "ami-05fecfb63c095734c"
+  ami                         = "ami-011222f8fd462cc0c"
+  instance_type               = "t2.medium"
+  subnet_id                   = module.ace-onprem-dc-vpc.public_subnets[0]
+  associate_public_ip_address = true
+  source_dest_check           = false
+  key_name                    = aws_key_pair.aws_west2_key.key_name
+  vpc_security_group_ids      = [aws_security_group.ace-onprem-dc-sg.id]
+  user_data                   = <<EOF
+    ios-config-100 = "username admin privilege 15 password ${var.ace_password}"
     ios-config-104 = "hostname OnPrem-DC"
     ios-config-1010 = "crypto keyring OnPrem-DC-Aviatrix"
     ios-config-1020 = "pre-shared-key address ${module.aws_transit_1.transit_gateway.eip} key ${var.ace_password}"
@@ -296,22 +317,6 @@ resource "aws_instance" "ace-onprem-dc-csr" {
   }
 }
 
-module "ace-onprem-dc-ubu" {
-  source                      = "terraform-aws-modules/ec2-instance/aws"
-  instance_type               = var.aws_test_instance_size
-  name                        = "ace-onprem-dc-ubu"
-  ami                         = data.aws_ami.ubuntu2.id
-  key_name                    = var.onprem_ec2_key_name
-  instance_count              = 1
-  subnet_id                   = module.ace-onprem-dc-vpc.public_subnets[0]
-  vpc_security_group_ids      = [aws_security_group.ace-onprem-dc-sg.id]
-  associate_public_ip_address = true
-  user_data_base64            = base64encode(local.onprem_user_data)
-  providers = {
-    aws = aws.west2
-  }
-}
-
 output "onprem_dc_csr_public_ip" {
   value = aws_instance.ace-onprem-dc-csr.public_ip
 }
@@ -319,3 +324,4 @@ output "onprem_dc_csr_public_ip" {
 output "onprem_dc_csr_private_ip" {
   value = aws_instance.ace-onprem-dc-csr.private_ip
 }
+*/
