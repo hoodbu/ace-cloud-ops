@@ -176,7 +176,7 @@ output "onprem_partner_ubu_private_ip" {
 
 #############################################################################
 
-module "ace-onprem-dc-vpc" {
+/* module "ace-onprem-dc-vpc" {
   providers      = { aws = aws.west2 }
   source         = "terraform-aws-modules/vpc/aws"
   name           = "ace-onprem-dc-vpc"
@@ -301,3 +301,4 @@ output "onprem_dc_csr_public_ip" {
 output "onprem_dc_csr_private_ip" {
   value = aws_instance.ace-onprem-dc-csr.private_ip
 }
+ */
