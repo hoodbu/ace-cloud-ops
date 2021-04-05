@@ -285,36 +285,17 @@ resource "aws_instance" "ace-onprem-dc-csr" {
     ios-config-1380 = "maximum-paths 2"
     ios-config-1390 = "exit-address-family"
     ios-config-1420 = "interface Loopback1"
-    ios-config-1430 = "ip address 10.0.1.1 255.255.255.128"
+    ios-config-1430 = "ip address 10.0.1.1 255.255.255.0"
     ios-config-1440 = "interface Loopback2"
-    ios-config-1450 = "ip address 10.0.2.1 255.255.255.128"
+    ios-config-1450 = "ip address 10.0.2.1 255.255.255.0"
     ios-config-1460 = "interface Loopback3"
-    ios-config-1470 = "ip address 10.0.3.1 255.255.255.128"
+    ios-config-1470 = "ip address 10.0.3.1 255.255.255.0"
     ios-config-1600 = "write memory"
   EOF
   tags = {
     Name = "ace-onprem-dc-csr"
   }
 }
-
-/* 
-    ios-config-1300 = "router bgp 65012"
-    ios-config-1310 = "bgp log-neighbor-changes"
-    ios-config-1320 = "neighbor 169.254.74.130 remote-as 65011"
-    ios-config-1330 = "neighbor 169.254.74.130 timers 10 30 30"
-    ios-config-1340 = "address-family ipv4"
-    ios-config-1350 = "redistribute connected"
-    ios-config-1360 = "neighbor 169.254.74.130 activate"
-    ios-config-1370 = "neighbor 169.254.74.130 soft-reconfiguration inbound"
-    ios-config-1380 = "maximum-paths 2"
-    ios-config-1420 = "interface Loopback1"
-    ios-config-1430 = "ip address 10.0.1.1 255.255.255.128"
-    ios-config-1440 = "interface Loopback2"
-    ios-config-1450 = "ip address 10.0.2.1 255.255.255.128"
-    ios-config-1460 = "interface Loopback3"
-    ios-config-1470 = "ip address 10.0.3.1 255.255.255.128"
-    ios-config-1390 = "exit-address-family"
-*/
 
 output "onprem_dc_csr_public_ip" {
   value = aws_instance.ace-onprem-dc-csr.public_ip

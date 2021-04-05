@@ -262,3 +262,11 @@ resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
     remote_tunnel_cidr = "169.254.74.129/30"
     custom_algorithms = false
 }
+
+resource "aviatrix_segmentation_security_domain_association" "test_segmentation_security_domain_association" {
+  # transit_gateway_name = module.aws_transit_1.transit_gateway.name
+  # transit_gateway_name = module.aws_transit_1
+  transit_gateway_name = var.aws_transit1_name
+  security_domain_name = "orange"
+  attachment_name      = aviatrix_transit_external_device_conn.s2c-onprem-dc.connection_name
+}
