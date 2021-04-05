@@ -285,11 +285,9 @@ resource "aws_instance" "ace-onprem-dc-csr" {
     ios-config-1380 = "maximum-paths 2"
     ios-config-1390 = "exit-address-family"
     ios-config-1420 = "interface Loopback1"
-    ios-config-1430 = "ip address 10.0.1.1 255.255.255.0"
+    ios-config-1430 = "ip address 10.0.111.1 255.255.255.0"
     ios-config-1440 = "interface Loopback2"
-    ios-config-1450 = "ip address 10.0.2.1 255.255.255.0"
-    ios-config-1460 = "interface Loopback3"
-    ios-config-1470 = "ip address 10.0.3.1 255.255.255.0"
+    ios-config-1450 = "ip address 10.0.211.1 255.255.255.0"
     ios-config-1600 = "write memory"
   EOF
   tags = {
