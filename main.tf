@@ -25,18 +25,18 @@ resource "aws_key_pair" "aws_west2_key" {
 }
 
 # Multi-Cloud Segmentation
-resource "aviatrix_segmentation_security_domain" "purple" {
-  domain_name = "purple"
+resource "aviatrix_segmentation_security_domain" "BU2" {
+  domain_name = "BU2"
 }
 
-resource "aviatrix_segmentation_security_domain" "orange" {
-  domain_name = "orange"
+resource "aviatrix_segmentation_security_domain" "BU1" {
+  domain_name = "BU1"
 }
 
-/* resource "aviatrix_segmentation_security_domain_connection_policy" "purple_orange" {
-  domain_name_1 = "purple"
-  domain_name_2 = "orange"
-  depends_on = [aviatrix_segmentation_security_domain.purple, aviatrix_segmentation_security_domain.orange]
+/* resource "aviatrix_segmentation_security_domain_connection_policy" "BU1_BU2" {
+  domain_name_1 = "BU1"
+  domain_name_2 = "BU2"
+  depends_on = [aviatrix_segmentation_security_domain.BU1, aviatrix_segmentation_security_domain.BU2]
 } */
 
 # AWS Transit Modules
@@ -70,7 +70,7 @@ module "aws_spoke_1" {
   ha_gw           = var.ha_enabled
   prefix          = var.prefix
   suffix          = var.suffix
-  security_domain = aviatrix_segmentation_security_domain.orange.domain_name
+  security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
   transit_gw      = module.aws_transit_1.transit_gateway.gw_name
 }
 
@@ -84,7 +84,7 @@ module "aws_spoke_2" {
   ha_gw           = var.ha_enabled
   prefix          = var.prefix
   suffix          = var.suffix
-  security_domain = aviatrix_segmentation_security_domain.purple.domain_name
+  security_domain = aviatrix_segmentation_security_domain.BU2.domain_name
   transit_gw      = module.aws_transit_1.transit_gateway.gw_name
 }
 
@@ -114,7 +114,7 @@ module "azure_spoke_1" {
   suffix          = var.suffix
   instance_size   = var.azure_spoke_instance_size
   ha_gw           = var.ha_enabled
-  security_domain = aviatrix_segmentation_security_domain.orange.domain_name
+  security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
   transit_gw      = module.azure_transit_1.transit_gateway.gw_name
 }
 
@@ -130,7 +130,7 @@ module "azure_spoke_2" {
   suffix          = var.suffix
   instance_size   = var.azure_spoke_instance_size
   ha_gw           = var.ha_enabled
-  security_domain = aviatrix_segmentation_security_domain.purple.domain_name
+  security_domain = aviatrix_segmentation_security_domain.BU2.domain_name
   transit_gw      = module.azure_transit_1.transit_gateway.gw_name
 }
 
@@ -161,7 +161,7 @@ module "gcp_spoke_1" {
   prefix          = var.prefix
   suffix          = var.suffix
   ha_gw           = var.ha_enabled
-  security_domain = aviatrix_segmentation_security_domain.orange.domain_name
+  security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
   transit_gw      = module.gcp_transit_1.transit_gateway.gw_name
 }
 
@@ -267,6 +267,6 @@ resource "aviatrix_segmentation_security_domain_association" "test_segmentation_
   # transit_gateway_name = module.aws_transit_1.transit_gateway.name
   # transit_gateway_name = module.aws_transit_1
   transit_gateway_name = var.aws_transit1_name
-  security_domain_name = "orange"
+  security_domain_name = "BU1"
   attachment_name      = aviatrix_transit_external_device_conn.s2c-onprem-dc.connection_name
 }
