@@ -2,7 +2,7 @@
 
 ### Summary
 
-This repository builds out a __completed__ representation of the infrastructure created for the ACE Cloud Ops course.
+This repository builds out a __completed__ representation of the infrastructure created for the Aviatrix ACE Cloud Ops course.
 
 It builds the following:
 
@@ -11,7 +11,8 @@ It builds the following:
 - Aviatrix Transit in GCP with 1 spoke
 - Ubuntu VMs with password authentication (1 per spoke)
 - Multi-Cloud Segmentation (2 security domains, no connection policy)
-- Site2Cloud with On-Prem Cisco CSR emulated in AWS
+- Site2Cloud connection between Spoke in GCP and On-Prem Cisco CSR (emulated in AWS)
+- Site2Cloud connection between Transit in AWS and a separate On-Prem Cisco CSR (emulated in AWS)
 - Egress FQDN gateway in Azure Spoke 2
 
 <img src="topology.png">
@@ -31,13 +32,20 @@ AWS Terraform Provider | > 3.0
 - Aviatrix Controller with Access Accounts defined for AWS, Azure, and GCP
 - Sufficient limits in place for CSPs and regions in scope **_(EIPs, Compute quotas, etc.)_**
 - Active subscriptions for the NGFW firewall images in scope
-- terraform .13 in the user environment ```terraform -v```
+- Terraform 0.13 in the user environment
 - Terraform provider requirements are met (AWS, GCP, Azure) in the runtime environment
-- Account credentials for each CSP defined in environment
+- Account credentials for each CSP defined in environment. The following environment variables will be needed:
+  - AWS_ACCESS_KEY_ID
+  - AWS_SECRET_ACCESS_KEY
+  - TF_VAR_azure_tenant_id
+  - TF_VAR_azure_subscription_id
+  - TF_VAR_azure_client_id
+  - TF_VAR_azure_client_secret
+  - GOOGLE_CREDENTIALS
 
 ### Workflow
 
-- Modify ```terraform.tfvars``` if needed
+- Modify ```terraform.tfvars``` as needed
 - ```terraform init```
 - ```terraform plan```
-- ```terraform apply --auto-approve```
+- ```terraform apply```
