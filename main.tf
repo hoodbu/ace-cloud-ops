@@ -187,6 +187,22 @@ module "transit-peering" {
   transit_gateways = [module.gcp_transit_1.transit_gateway.gw_name, module.azure_transit_1.transit_gateway.gw_name, module.aws_transit_1.transit_gateway.gw_name]
 }
 
+# Transit FireNet Spoke Inspection Policy
+resource "aviatrix_transit_firenet_policy" "transit_firenet_policy_1" {
+    # transit_firenet_gateway_name = "ace-aws-eu-west-1-transit1"
+    transit_firenet_gateway_name = var.aws_transit1_name
+    # inspected_resource_name = "SPOKE:ace-aws-eu-west-1-spoke1"
+    inspected_resource_name = "SPOKE:${var.aws_spoke1_name}"
+}
+
+resource "aviatrix_transit_firenet_policy" "transit_firenet_policy_2" {
+    # transit_firenet_gateway_name = "ace-aws-eu-west-1-transit1"
+    transit_firenet_gateway_name = var.aws_transit1_name
+    # inspected_resource_name = "SPOKE:ace-aws-eu-west-1-spoke2"
+    inspected_resource_name = "SPOKE:${var.aws_spoke2_name}"
+}
+
+
 # Create an Aviatrix Site2cloud Connection
 resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   vpc_id                     = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
