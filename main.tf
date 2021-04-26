@@ -175,9 +175,7 @@ resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
   vpc_id       = module.azure_spoke_2.vnet.vpc_id
   vpc_reg      = var.azure_spoke2_region
   gw_size      = var.azure_spoke_instance_size
-  # subnet       = var.azure_spoke2_cidr
-  # subnet       = module.azure_spoke_2.vnet.public_subnets[0].name
-  subnet = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  subnet       = module.azure_spoke_2.vnet.public_subnets[0].cidr
 }
 
 # Multi region Multi-Cloud transit peering
@@ -189,17 +187,13 @@ module "transit-peering" {
 
 # Transit FireNet Spoke Inspection Policy
 resource "aviatrix_transit_firenet_policy" "transit_firenet_policy_1" {
-    # transit_firenet_gateway_name = "ace-aws-eu-west-1-transit1"
-    transit_firenet_gateway_name = var.aws_transit1_name
-    # inspected_resource_name = "SPOKE:ace-aws-eu-west-1-spoke1"
-    inspected_resource_name = "SPOKE:${var.aws_spoke1_name}"
+  transit_firenet_gateway_name = var.aws_transit1_name
+  inspected_resource_name      = "SPOKE:${var.aws_spoke1_name}"
 }
 
 resource "aviatrix_transit_firenet_policy" "transit_firenet_policy_2" {
-    # transit_firenet_gateway_name = "ace-aws-eu-west-1-transit1"
-    transit_firenet_gateway_name = var.aws_transit1_name
-    # inspected_resource_name = "SPOKE:ace-aws-eu-west-1-spoke2"
-    inspected_resource_name = "SPOKE:${var.aws_spoke2_name}"
+  transit_firenet_gateway_name = var.aws_transit1_name
+  inspected_resource_name      = "SPOKE:${var.aws_spoke2_name}"
 }
 
 
