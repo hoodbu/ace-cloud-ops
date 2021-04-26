@@ -42,21 +42,23 @@ resource "aviatrix_segmentation_security_domain" "BU1" {
 # AWS Transit Modules
 module "aws_transit_1" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
-  source                 = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
-  version                = "3.0.3"
-  account                = var.aws_account_name
-  region                 = var.aws_transit1_region
-  name                   = var.aws_transit1_name
-  cidr                   = var.aws_transit1_cidr
-  ha_gw                  = var.ha_enabled
-  prefix                 = var.prefix
-  suffix                 = var.suffix
-  egress_enabled         = false
-  insane_mode            = false
-  instance_size          = var.aws_transit_instance_size
-  enable_segmentation    = true
-  firewall_image         = var.aws_firewall_image
-  firewall_image_version = var.aws_firewall_image_version
+  source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=1f2eb38bd21201ca66dc9377fe7853cf1b4ad58c"
+  # source                 = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
+  # version                = "3.0.3"
+  account                              = var.aws_account_name
+  region                               = var.aws_transit1_region
+  name                                 = var.aws_transit1_name
+  cidr                                 = var.aws_transit1_cidr
+  ha_gw                                = var.ha_enabled
+  prefix                               = var.prefix
+  suffix                               = var.suffix
+  egress_enabled                       = false
+  insane_mode                          = false
+  instance_size                        = var.aws_transit_instance_size
+  enable_segmentation                  = true
+  keep_alive_via_lan_interface_enabled = true
+  firewall_image                       = var.aws_firewall_image
+  firewall_image_version               = var.aws_firewall_image_version
 }
 
 # AWS Spoke Modules
@@ -187,11 +189,11 @@ module "transit-peering" {
 
 # Create an Aviatrix Site2cloud Connection
 resource "aviatrix_site2cloud" "s2c-onprem-partner" {
-  vpc_id              = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
-  connection_name     = "ACE-CALL-CENTER"
-  connection_type     = "mapped"
-  remote_gateway_type = "generic"
-  tunnel_type         = "route"
+  vpc_id                     = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
+  connection_name            = "ACE-CALL-CENTER"
+  connection_type            = "mapped"
+  remote_gateway_type        = "generic"
+  tunnel_type                = "route"
   primary_cloud_gateway_name = module.gcp_spoke_1.vpc.name
   remote_gateway_ip          = aws_instance.ace-onprem-partner-csr.public_ip
   pre_shared_key             = var.ace_password
@@ -248,19 +250,19 @@ output "firewall_public_ip" {
 ########################################################################
 
 resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
-    vpc_id = module.aws_transit_1.vpc.vpc_id
-    connection_name = "ACE-ONPREM-DC"
-    gw_name = module.aws_transit_1.vpc.name
-    remote_gateway_ip = aws_instance.ace-onprem-dc-csr.public_ip
-    pre_shared_key = var.ace_password
-    connection_type = "bgp"
-    direct_connect = false
-    bgp_local_as_num = "65011"
-    bgp_remote_as_num = "65012"
-    ha_enabled = false
-    local_tunnel_cidr = "169.254.74.130/30"
-    remote_tunnel_cidr = "169.254.74.129/30"
-    custom_algorithms = false
+  vpc_id             = module.aws_transit_1.vpc.vpc_id
+  connection_name    = "ACE-ONPREM-DC"
+  gw_name            = module.aws_transit_1.vpc.name
+  remote_gateway_ip  = aws_instance.ace-onprem-dc-csr.public_ip
+  pre_shared_key     = var.ace_password
+  connection_type    = "bgp"
+  direct_connect     = false
+  bgp_local_as_num   = "65011"
+  bgp_remote_as_num  = "65012"
+  ha_enabled         = false
+  local_tunnel_cidr  = "169.254.74.130/30"
+  remote_tunnel_cidr = "169.254.74.129/30"
+  custom_algorithms  = false
 }
 
 resource "aviatrix_segmentation_security_domain_association" "test_segmentation_security_domain_association" {
