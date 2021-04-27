@@ -180,9 +180,16 @@ resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
 
 # Multi region Multi-Cloud transit peering
 module "transit-peering" {
-  source           = "terraform-aviatrix-modules/mc-transit-peering/aviatrix"
-  version          = "1.0.2"
-  transit_gateways = [module.gcp_transit_1.transit_gateway.gw_name, module.azure_transit_1.transit_gateway.gw_name, module.aws_transit_1.transit_gateway.gw_name]
+  # source  = "terraform-aviatrix-modules/mc-transit-peering/aviatrix"
+  # version = "1.0.2"
+  # source = "git@github.com:terraform-aviatrix-modules/terraform-aviatrix-mc-transit-peering.git?ref=v1.0.3"
+  source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-mc-transit-peering.git?ref=v1.0.3"
+
+  transit_gateways = [
+    module.gcp_transit_1.transit_gateway.gw_name,
+    module.azure_transit_1.transit_gateway.gw_name,
+    module.aws_transit_1.transit_gateway.gw_name
+  ]
 }
 
 # Transit FireNet Spoke Inspection Policy
