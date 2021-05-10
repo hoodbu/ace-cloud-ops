@@ -24,27 +24,11 @@ resource "aws_key_pair" "aws_west2_key" {
   public_key = tls_private_key.avtx_key.public_key_openssh
 }
 
-# Multi-Cloud Segmentation
-resource "aviatrix_segmentation_security_domain" "BU2" {
-  domain_name = "BU2"
-}
-
-resource "aviatrix_segmentation_security_domain" "BU1" {
-  domain_name = "BU1"
-}
-
-/* resource "aviatrix_segmentation_security_domain_connection_policy" "BU1_BU2" {
-  domain_name_1 = "BU1"
-  domain_name_2 = "BU2"
-  depends_on = [aviatrix_segmentation_security_domain.BU1, aviatrix_segmentation_security_domain.BU2]
-} */
-
 # AWS Transit Modules
 module "aws_transit_1" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
-  source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=1f2eb38bd21201ca66dc9377fe7853cf1b4ad58c"
-  # source                 = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
-  # version                = "3.0.3"
+  source                 = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
+  version                = "3.0.4"
   account                              = var.aws_account_name
   region                               = var.aws_transit1_region
   name                                 = var.aws_transit1_name
@@ -180,22 +164,31 @@ resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
 
 # Multi region Multi-Cloud transit peering
 module "transit-peering" {
-  # source  = "terraform-aviatrix-modules/mc-transit-peering/aviatrix"
-  # version = "1.0.2"
-  # source = "git@github.com:terraform-aviatrix-modules/terraform-aviatrix-mc-transit-peering.git?ref=v1.0.3"
-  source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-mc-transit-peering.git?ref=v1.0.3"
-
+  # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-mc-transit-peering.git?ref=v1.0.3"
+  source  = "terraform-aviatrix-modules/mc-transit-peering/aviatrix"
+  version = "1.0.3"
   transit_gateways = [
     module.gcp_transit_1.transit_gateway.gw_name,
     module.azure_transit_1.transit_gateway.gw_name,
     module.aws_transit_1.transit_gateway.gw_name
   ]
-
   excluded_cidrs = [
     "0.0.0.0/0",
   ]
-
 }
+
+# Multi-Cloud Segmentation
+resource "aviatrix_segmentation_security_domain" "BU2" {
+  domain_name = "BU2"
+}
+resource "aviatrix_segmentation_security_domain" "BU1" {
+  domain_name = "BU1"
+}
+/* resource "aviatrix_segmentation_security_domain_connection_policy" "BU1_BU2" {
+  domain_name_1 = "BU1"
+  domain_name_2 = "BU2"
+  depends_on = [aviatrix_segmentation_security_domain.BU1, aviatrix_segmentation_security_domain.BU2]
+} */
 
 # Transit FireNet Spoke Inspection Policy
 resource "aviatrix_transit_firenet_policy" "transit_firenet_policy_1" {
