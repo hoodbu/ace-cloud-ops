@@ -214,7 +214,7 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   primary_cloud_gateway_name = module.gcp_spoke_1.vpc.name
   remote_gateway_ip          = aws_instance.ace-onprem-partner-csr.public_ip
   pre_shared_key             = var.ace_password
-  phase1_remote_identifier   = aws_instance.ace-onprem-partner-csr.private_ip
+  phase1_remote_identifier   = [aws_instance.ace-onprem-partner-csr.private_ip]
   local_subnet_cidr          = "172.16.211.0/24"
   local_subnet_virtual       = "192.168.1.0/24"
   remote_subnet_cidr         = "172.16.211.0/24"
@@ -273,7 +273,7 @@ resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
   gw_name                  = module.aws_transit_1.vpc.name
   remote_gateway_ip        = aws_instance.ace-onprem-dc-csr.public_ip
   pre_shared_key           = var.ace_password
-  phase1_remote_identifier = aws_instance.ace-onprem-dc-csr.private_ip
+  phase1_remote_identifier = [aws_instance.ace-onprem-dc-csr.private_ip]
   connection_type          = "bgp"
   direct_connect           = false
   bgp_local_as_num         = "65011"
