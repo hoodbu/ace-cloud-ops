@@ -245,6 +245,9 @@ resource "aviatrix_fqdn" "fqdn_filter" {
 
   fqdn_tag            = var.egress_fqdn_tag
   manage_domain_names = false
+  depends_on = [
+    aviatrix_fqdn_tag_rule.fqdn_tag_rule_1
+  ]
 }
 
 resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
