@@ -230,17 +230,29 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
     gw_name        = aviatrix_gateway.ace-azure-egress-fqdn.gw_name
   }
   domain_names {
-    fqdn  = "ubuntu.com"
-    proto = "tcp"
-    port  = "443"
-    action = "Allow"
-  }
-  domain_names {
     fqdn  = "netjoints.com"
     proto = "tcp"
     port  = "443"
   }
 } */
+
+resource "aviatrix_fqdn" "fqdn_3" {
+    fqdn_mode = "white"
+    fqdn_enabled = true
+    gw_filter_tag_list {
+        gw_name        = aviatrix_gateway.ace-azure-egress-fqdn.gw_name
+    }
+
+    fqdn_tag = "ACE-CLOUD-OPS"
+    manage_domain_names = false
+}
+
+resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_4" {
+    fqdn_tag_name = "ACE-CLOUD-OPS"
+    fqdn = "ntp.ubuntu.com"
+    protocol = "udp"
+    port = "123"
+}
 
 /* output "gcp_spoke_1_vpc" {
   value = module.gcp_spoke_1.vpc
