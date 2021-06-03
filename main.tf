@@ -245,9 +245,6 @@ resource "aviatrix_fqdn" "fqdn_filter" {
 
   fqdn_tag            = var.egress_fqdn_tag
   manage_domain_names = false
-  depends_on = [
-    aviatrix_fqdn_tag_rule.fqdn_tag_rule_1
-  ]
 }
 
 resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
@@ -255,6 +252,9 @@ resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
   fqdn          = "ntp.ubuntu.com"
   protocol      = "udp"
   port          = "123"
+  depends_on = [
+    aviatrix_fqdn.fqdn_filter
+  ]
 }
 
 /* output "gcp_spoke_1_vpc" {
