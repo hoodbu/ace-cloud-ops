@@ -236,7 +236,7 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   }
 } */
 
-resource "aviatrix_fqdn" "fqdn_3" {
+resource "aviatrix_fqdn" "fqdn_filter" {
     fqdn_mode = "white"
     fqdn_enabled = true
     gw_filter_tag_list {
@@ -247,7 +247,7 @@ resource "aviatrix_fqdn" "fqdn_3" {
     manage_domain_names = false
 }
 
-resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_4" {
+resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
     fqdn_tag_name = "ACE-CLOUD-OPS"
     fqdn = "ntp.ubuntu.com"
     protocol = "udp"
