@@ -207,7 +207,7 @@ resource "aviatrix_transit_firenet_policy" "transit_firenet_policy_2" {
 # Create an Aviatrix Site2cloud Connection
 resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   vpc_id                     = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
-  connection_name            = "ACE-CALL-CENTER"
+  connection_name            = "ACE-ONPREM-CALLCENTER"
   connection_type            = "mapped"
   remote_gateway_type        = "generic"
   tunnel_type                = "route"
@@ -237,21 +237,21 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
 } */
 
 resource "aviatrix_fqdn" "fqdn_filter" {
-    fqdn_mode = "white"
-    fqdn_enabled = true
-    gw_filter_tag_list {
-        gw_name        = aviatrix_gateway.ace-azure-egress-fqdn.gw_name
-    }
+  fqdn_mode    = "white"
+  fqdn_enabled = true
+  gw_filter_tag_list {
+    gw_name = aviatrix_gateway.ace-azure-egress-fqdn.gw_name
+  }
 
-    fqdn_tag = "ACE-CLOUD-OPS"
-    manage_domain_names = false
+  fqdn_tag            = var.egress_fqdn_tag
+  manage_domain_names = false
 }
 
 resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
-    fqdn_tag_name = "ACE-CLOUD-OPS"
-    fqdn = "ntp.ubuntu.com"
-    protocol = "udp"
-    port = "123"
+  fqdn_tag_name = var.egress_fqdn_tag
+  fqdn          = "ntp.ubuntu.com"
+  protocol      = "udp"
+  port          = "123"
 }
 
 /* output "gcp_spoke_1_vpc" {
