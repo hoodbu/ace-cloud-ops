@@ -28,7 +28,7 @@ resource "aws_key_pair" "aws_west2_key" {
 module "aws_transit_1" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
   source                               = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
-  version                              = "3.0.4"
+  version                              = "4.0.1"
   account                              = var.aws_account_name
   region                               = var.aws_transit1_region
   name                                 = var.aws_transit1_name
@@ -48,7 +48,7 @@ module "aws_transit_1" {
 # AWS Spoke Modules
 module "aws_spoke_1" {
   source          = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version         = "3.0.0"
+  version         = "4.0.1"
   account         = var.aws_account_name
   region          = var.aws_spoke1_region
   name            = var.aws_spoke1_name
@@ -62,7 +62,7 @@ module "aws_spoke_1" {
 
 module "aws_spoke_2" {
   source          = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version         = "3.0.0"
+  version         = "4.0.1"
   account         = var.aws_account_name
   region          = var.aws_spoke2_region
   name            = var.aws_spoke2_name
@@ -77,7 +77,7 @@ module "aws_spoke_2" {
 # Azure Transit Module
 module "azure_transit_1" {
   source              = "terraform-aviatrix-modules/azure-transit/aviatrix"
-  version             = "3.0.0"
+  version             = "4.0.0"
   ha_gw               = var.ha_enabled
   account             = var.azure_account_name
   region              = var.azure_transit1_region
@@ -91,7 +91,7 @@ module "azure_transit_1" {
 # Azure Spoke 1 
 module "azure_spoke_1" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version         = "3.0.0"
+  version         = "4.0.0"
   account         = var.azure_account_name
   region          = var.azure_spoke1_region
   name            = var.azure_spoke1_name
@@ -107,7 +107,7 @@ module "azure_spoke_1" {
 # Azure Spoke 2
 module "azure_spoke_2" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version         = "3.0.0"
+  version         = "4.0.0"
   account         = var.azure_account_name
   region          = var.azure_spoke2_region
   name            = var.azure_spoke2_name

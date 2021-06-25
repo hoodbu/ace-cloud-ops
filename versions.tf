@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aviatrix = {
       source  = "AviatrixSystems/aviatrix"
-      version = "~> 2.19.1"
+      version = "~> 2.19.4"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -15,5 +15,5 @@ terraform {
       version = "~> 3.0"
     }
   }
-  required_version = ">= 0.13"
+  required_version = ">= 0.15"
 }
