@@ -153,13 +153,14 @@ module "gcp_spoke_1" {
 
 # Create another Gateway in the Azure Spoke for Egress FQDN (later on)
 resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
-  cloud_type   = 8
-  account_name = var.azure_account_name
-  gw_name      = "${var.azure_spoke2_name}-egress"
-  vpc_id       = module.azure_spoke_2.vnet.vpc_id
-  vpc_reg      = var.azure_spoke2_region
-  gw_size      = var.azure_spoke_instance_size
-  subnet       = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  cloud_type     = 8
+  account_name   = var.azure_account_name
+  gw_name        = "${var.azure_spoke2_name}-egress"
+  vpc_id         = module.azure_spoke_2.vnet.vpc_id
+  vpc_reg        = var.azure_spoke2_region
+  gw_size        = var.azure_spoke_instance_size
+  subnet         = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  single_ip_snat = true
 }
 
 # Multi region Multi-Cloud transit peering
@@ -180,9 +181,19 @@ module "transit-peering" {
 # Multi-Cloud Segmentation
 resource "aviatrix_segmentation_security_domain" "BU2" {
   domain_name = "BU2"
+  depends_on = [
+    module.aws_transit_1,
+    module.azure_transit_1,
+    module.gcp_transit_1
+  ]
 }
 resource "aviatrix_segmentation_security_domain" "BU1" {
   domain_name = "BU1"
+  depends_on = [
+    module.aws_transit_1,
+    module.azure_transit_1,
+    module.gcp_transit_1
+  ]
 }
 /* resource "aviatrix_segmentation_security_domain_connection_policy" "BU1_BU2" {
   domain_name_1 = "BU1"
