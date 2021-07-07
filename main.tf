@@ -27,8 +27,8 @@ resource "aws_key_pair" "aws_west2_key" {
 # AWS Transit Modules
 module "aws_transit_1" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
-  source                 = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
-  version                = "3.0.4"
+  source                               = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
+  version                              = "4.0.1"
   account                              = var.aws_account_name
   region                               = var.aws_transit1_region
   name                                 = var.aws_transit1_name
@@ -48,7 +48,7 @@ module "aws_transit_1" {
 # AWS Spoke Modules
 module "aws_spoke_1" {
   source          = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version         = "3.0.0"
+  version         = "4.0.1"
   account         = var.aws_account_name
   region          = var.aws_spoke1_region
   name            = var.aws_spoke1_name
@@ -62,7 +62,7 @@ module "aws_spoke_1" {
 
 module "aws_spoke_2" {
   source          = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version         = "3.0.0"
+  version         = "4.0.1"
   account         = var.aws_account_name
   region          = var.aws_spoke2_region
   name            = var.aws_spoke2_name
@@ -77,7 +77,7 @@ module "aws_spoke_2" {
 # Azure Transit Module
 module "azure_transit_1" {
   source              = "terraform-aviatrix-modules/azure-transit/aviatrix"
-  version             = "3.0.0"
+  version             = "4.0.0"
   ha_gw               = var.ha_enabled
   account             = var.azure_account_name
   region              = var.azure_transit1_region
@@ -91,7 +91,7 @@ module "azure_transit_1" {
 # Azure Spoke 1 
 module "azure_spoke_1" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version         = "3.0.0"
+  version         = "4.0.0"
   account         = var.azure_account_name
   region          = var.azure_spoke1_region
   name            = var.azure_spoke1_name
@@ -107,7 +107,7 @@ module "azure_spoke_1" {
 # Azure Spoke 2
 module "azure_spoke_2" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version         = "3.0.0"
+  version         = "4.0.0"
   account         = var.azure_account_name
   region          = var.azure_spoke2_region
   name            = var.azure_spoke2_name
@@ -153,13 +153,15 @@ module "gcp_spoke_1" {
 
 # Create another Gateway in the Azure Spoke for Egress FQDN (later on)
 resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
-  cloud_type   = 8
-  account_name = var.azure_account_name
-  gw_name      = "${var.azure_spoke2_name}-egress"
-  vpc_id       = module.azure_spoke_2.vnet.vpc_id
-  vpc_reg      = var.azure_spoke2_region
-  gw_size      = var.azure_spoke_instance_size
-  subnet       = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  cloud_type     = 8
+  account_name   = var.azure_account_name
+  gw_name        = "${var.azure_spoke2_name}-egress"
+  vpc_id         = module.azure_spoke_2.vnet.vpc_id
+  vpc_reg        = var.azure_spoke2_region
+  gw_size        = var.azure_spoke_instance_size
+  subnet         = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  # single_ip_snat = true
+  # depends_on     = [module.azure_spoke_2]
 }
 
 # Multi region Multi-Cloud transit peering
@@ -180,9 +182,19 @@ module "transit-peering" {
 # Multi-Cloud Segmentation
 resource "aviatrix_segmentation_security_domain" "BU2" {
   domain_name = "BU2"
+  depends_on = [
+    module.aws_transit_1,
+    module.azure_transit_1,
+    module.gcp_transit_1
+  ]
 }
 resource "aviatrix_segmentation_security_domain" "BU1" {
   domain_name = "BU1"
+  depends_on = [
+    module.aws_transit_1,
+    module.azure_transit_1,
+    module.gcp_transit_1
+  ]
 }
 /* resource "aviatrix_segmentation_security_domain_connection_policy" "BU1_BU2" {
   domain_name_1 = "BU1"
@@ -207,13 +219,14 @@ resource "aviatrix_transit_firenet_policy" "transit_firenet_policy_2" {
 # Create an Aviatrix Site2cloud Connection
 resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   vpc_id                     = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
-  connection_name            = "ACE-CALL-CENTER"
+  connection_name            = "ACE-ONPREM-CALLCENTER"
   connection_type            = "mapped"
   remote_gateway_type        = "generic"
   tunnel_type                = "route"
   primary_cloud_gateway_name = module.gcp_spoke_1.vpc.name
   remote_gateway_ip          = aws_instance.ace-onprem-partner-csr.public_ip
   pre_shared_key             = var.ace_password
+  phase1_remote_identifier   = [aws_instance.ace-onprem-partner-csr.private_ip]
   local_subnet_cidr          = "172.16.211.0/24"
   local_subnet_virtual       = "192.168.1.0/24"
   remote_subnet_cidr         = "172.16.211.0/24"
@@ -229,17 +242,32 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
     gw_name        = aviatrix_gateway.ace-azure-egress-fqdn.gw_name
   }
   domain_names {
-    fqdn  = "ubuntu.com"
-    proto = "tcp"
-    port  = "443"
-    action = "Allow"
-  }
-  domain_names {
     fqdn  = "netjoints.com"
     proto = "tcp"
     port  = "443"
   }
 } */
+
+resource "aviatrix_fqdn" "fqdn_filter" {
+  fqdn_mode    = "white"
+  fqdn_enabled = true
+  gw_filter_tag_list {
+    gw_name = aviatrix_gateway.ace-azure-egress-fqdn.gw_name
+  }
+
+  fqdn_tag            = var.egress_fqdn_tag
+  manage_domain_names = false
+}
+
+resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
+  fqdn_tag_name = var.egress_fqdn_tag
+  fqdn          = "ntp.ubuntu.com"
+  protocol      = "udp"
+  port          = "123"
+  depends_on = [
+    aviatrix_fqdn.fqdn_filter
+  ]
+}
 
 /* output "gcp_spoke_1_vpc" {
   value = module.gcp_spoke_1.vpc
@@ -267,19 +295,20 @@ output "firewall_public_ip" {
 ########################################################################
 
 resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
-  vpc_id             = module.aws_transit_1.vpc.vpc_id
-  connection_name    = "ACE-ONPREM-DC"
-  gw_name            = module.aws_transit_1.vpc.name
-  remote_gateway_ip  = aws_instance.ace-onprem-dc-csr.public_ip
-  pre_shared_key     = var.ace_password
-  connection_type    = "bgp"
-  direct_connect     = false
-  bgp_local_as_num   = "65011"
-  bgp_remote_as_num  = "65012"
-  ha_enabled         = false
-  local_tunnel_cidr  = "169.254.74.130/30"
-  remote_tunnel_cidr = "169.254.74.129/30"
-  custom_algorithms  = false
+  vpc_id                   = module.aws_transit_1.vpc.vpc_id
+  connection_name          = "ACE-ONPREM-DC"
+  gw_name                  = module.aws_transit_1.vpc.name
+  remote_gateway_ip        = aws_instance.ace-onprem-dc-csr.public_ip
+  pre_shared_key           = var.ace_password
+  phase1_remote_identifier = [aws_instance.ace-onprem-dc-csr.private_ip]
+  connection_type          = "bgp"
+  direct_connect           = false
+  bgp_local_as_num         = "65011"
+  bgp_remote_as_num        = "65012"
+  ha_enabled               = false
+  local_tunnel_cidr        = "169.254.74.130/30"
+  remote_tunnel_cidr       = "169.254.74.129/30"
+  custom_algorithms        = false
 }
 
 resource "aviatrix_segmentation_security_domain_association" "test_segmentation_security_domain_association" {
@@ -288,4 +317,5 @@ resource "aviatrix_segmentation_security_domain_association" "test_segmentation_
   transit_gateway_name = var.aws_transit1_name
   security_domain_name = "BU1"
   attachment_name      = aviatrix_transit_external_device_conn.s2c-onprem-dc.connection_name
+  depends_on           = [module.aws_transit_1]
 }

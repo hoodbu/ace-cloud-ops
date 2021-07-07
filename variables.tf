@@ -200,3 +200,7 @@ variable "gcp_spoke1_name" {
 variable "gcp_spoke1_cidr" {
   default = "172.16.211.0/24"
 }
+
+variable "egress_fqdn_tag" {
+  default = "ACE-CLOUD-OPS"
+}
