@@ -160,6 +160,7 @@ resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
   vpc_reg        = var.azure_spoke2_region
   gw_size        = var.azure_spoke_instance_size
   subnet         = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  single_ip_snat = false
 }
 
 # Multi region Multi-Cloud transit peering
@@ -295,8 +296,6 @@ resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
 }
 
 resource "aviatrix_segmentation_security_domain_association" "test_segmentation_security_domain_association" {
-  # transit_gateway_name = module.aws_transit_1.transit_gateway.name
-  # transit_gateway_name = module.aws_transit_1
   transit_gateway_name = var.aws_transit1_name
   security_domain_name = "BU1"
   attachment_name      = aviatrix_transit_external_device_conn.s2c-onprem-dc.connection_name
