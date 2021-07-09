@@ -160,6 +160,11 @@ resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
   vpc_reg        = var.azure_spoke2_region
   gw_size        = var.azure_spoke_instance_size
   subnet         = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  lifecycle { 
+    ignore_changes = [
+      single_ip_snat
+    ]
+  }
   single_ip_snat = false
 }
 
