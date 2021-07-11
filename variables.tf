@@ -50,11 +50,13 @@ variable "aws_transit1_cidr" {
 }
 
 variable "aws_firewall_image" {
-  default = "Check Point CloudGuard IaaS All-In-One"
+  # default = "Check Point CloudGuard IaaS All-In-One"
+  default = "Fortinet FortiGate Next-Generation Firewall"
 }
 
 variable "aws_firewall_image_version" {
-  default = "R80.40-294.581"
+  # default = "R80.40-294.581"
+  default = "(7.0.0)"
 }
 
 variable "aws_spoke1_region" {

@@ -6,7 +6,7 @@ This repository builds out a __completed__ representation of the infrastructure 
 
 It builds the following:
 
-- Aviatrix Transit FireNet in AWS (with Check Point Firewall) with 2 spokes
+- Aviatrix Transit FireNet in AWS (with Fortinet FortiGate Firewall) with 2 spokes
 - Aviatrix Transit in Azure with 2 spokes
 - Aviatrix Transit in GCP with 1 spoke
 - Ubuntu VMs with password authentication (1 per spoke)
@@ -19,8 +19,8 @@ It builds the following:
 
 Component | Version
 --- | ---
-Aviatrix Controller | UserConnect-6.4.2618 (6.4)
-Aviatrix Terraform Provider | > 2.19.1
+Aviatrix Controller | UserConnect-6.4.2674 (6.4)
+Aviatrix Terraform Provider | > 2.19.4
 Terraform | 0.15
 Azure Terraform Provider | > 2.0.0
 GCP Terraform Provider | 3.49

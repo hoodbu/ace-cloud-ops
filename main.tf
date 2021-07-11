@@ -10,6 +10,11 @@ resource "local_file" "avtx_priv_key" {
   content         = tls_private_key.avtx_key.private_key_pem
   filename        = "avtx_priv_key.pem"
   file_permission = "0400"
+  lifecycle {
+    ignore_changes = [
+      content
+    ]
+  }
 }
 
 resource "aws_key_pair" "aws_west1_key" {
@@ -153,15 +158,19 @@ module "gcp_spoke_1" {
 
 # Create another Gateway in the Azure Spoke for Egress FQDN (later on)
 resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
-  cloud_type     = 8
-  account_name   = var.azure_account_name
-  gw_name        = "${var.azure_spoke2_name}-egress"
-  vpc_id         = module.azure_spoke_2.vnet.vpc_id
-  vpc_reg        = var.azure_spoke2_region
-  gw_size        = var.azure_spoke_instance_size
-  subnet         = module.azure_spoke_2.vnet.public_subnets[0].cidr
-  # single_ip_snat = true
-  # depends_on     = [module.azure_spoke_2]
+  cloud_type   = 8
+  account_name = var.azure_account_name
+  gw_name      = "${var.azure_spoke2_name}-egress"
+  vpc_id       = module.azure_spoke_2.vnet.vpc_id
+  vpc_reg      = var.azure_spoke2_region
+  gw_size      = var.azure_spoke_instance_size
+  subnet       = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  lifecycle {
+    ignore_changes = [
+      single_ip_snat
+    ]
+  }
+  single_ip_snat = false
 }
 
 # Multi region Multi-Cloud transit peering
@@ -233,21 +242,6 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   remote_subnet_virtual      = "192.168.2.0/24"
 }
 
-# Create an Aviatrix Gateway FQDN filter
-/* resource "aviatrix_fqdn" "fqdn_filter" {
-  fqdn_tag     = "ace-ops-tag"
-  fqdn_enabled = true
-  fqdn_mode    = "white"
-  gw_filter_tag_list {
-    gw_name        = aviatrix_gateway.ace-azure-egress-fqdn.gw_name
-  }
-  domain_names {
-    fqdn  = "netjoints.com"
-    proto = "tcp"
-    port  = "443"
-  }
-} */
-
 resource "aviatrix_fqdn" "fqdn_filter" {
   fqdn_mode    = "white"
   fqdn_enabled = true
@@ -312,8 +306,6 @@ resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
 }
 
 resource "aviatrix_segmentation_security_domain_association" "test_segmentation_security_domain_association" {
-  # transit_gateway_name = module.aws_transit_1.transit_gateway.name
-  # transit_gateway_name = module.aws_transit_1
   transit_gateway_name = var.aws_transit1_name
   security_domain_name = "BU1"
   attachment_name      = aviatrix_transit_external_device_conn.s2c-onprem-dc.connection_name
