@@ -10,6 +10,11 @@ resource "local_file" "avtx_priv_key" {
   content         = tls_private_key.avtx_key.private_key_pem
   filename        = "avtx_priv_key.pem"
   file_permission = "0400"
+  lifecycle {
+    ignore_changes = [
+      content
+    ]
+  }
 }
 
 resource "aws_key_pair" "aws_west1_key" {
@@ -153,14 +158,14 @@ module "gcp_spoke_1" {
 
 # Create another Gateway in the Azure Spoke for Egress FQDN (later on)
 resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
-  cloud_type     = 8
-  account_name   = var.azure_account_name
-  gw_name        = "${var.azure_spoke2_name}-egress"
-  vpc_id         = module.azure_spoke_2.vnet.vpc_id
-  vpc_reg        = var.azure_spoke2_region
-  gw_size        = var.azure_spoke_instance_size
-  subnet         = module.azure_spoke_2.vnet.public_subnets[0].cidr
-  lifecycle { 
+  cloud_type   = 8
+  account_name = var.azure_account_name
+  gw_name      = "${var.azure_spoke2_name}-egress"
+  vpc_id       = module.azure_spoke_2.vnet.vpc_id
+  vpc_reg      = var.azure_spoke2_region
+  gw_size      = var.azure_spoke_instance_size
+  subnet       = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  lifecycle {
     ignore_changes = [
       single_ip_snat
     ]
