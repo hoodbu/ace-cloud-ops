@@ -87,7 +87,7 @@ variable "aws_test_instance_size" {
   default = "t2.micro"
 }
 
-variable "spoke1_ec2_key_name" {
+variable "EW1_ec2_key_name" {
   default = "ace-cloud-ops"
 }
 
