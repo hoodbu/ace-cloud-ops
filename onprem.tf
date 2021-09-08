@@ -148,7 +148,7 @@ module "ace-onprem-ubu" {
   name                        = "ace-onprem-ubu"
   ami                         = data.aws_ami.ubuntu2.id
   key_name                    = var.onprem_ec2_key_name
-  instance_count              = 1
+  # instance_count              = 1
   subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
   associate_public_ip_address = true
