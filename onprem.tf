@@ -144,6 +144,7 @@ resource "aws_route" "ace-onprem-mapped-route" {
 
 module "ace-onprem-ubu" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
+  version                     = "2.21.0"
   instance_type               = var.aws_test_instance_size
   name                        = "ace-onprem-ubu"
   ami                         = data.aws_ami.ubuntu2.id
