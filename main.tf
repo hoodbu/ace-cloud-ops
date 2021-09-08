@@ -6,7 +6,7 @@ resource "tls_private_key" "avtx_key" {
   rsa_bits  = 2048
 }
 
-resource "local_file" "avtx_priv_key" {
+/* resource "local_file" "avtx_priv_key" {
   content         = tls_private_key.avtx_key.private_key_pem
   filename        = "avtx_priv_key.pem"
   file_permission = "0400"
@@ -15,11 +15,11 @@ resource "local_file" "avtx_priv_key" {
       content
     ]
   }
-}
+} */
 
 resource "aws_key_pair" "aws_west1_key" {
   provider   = aws.west
-  key_name   = var.spoke1_ec2_key_name
+  key_name   = var.EW1_ec2_key_name
   public_key = tls_private_key.avtx_key.public_key_openssh
 }
 
@@ -263,28 +263,9 @@ resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
   ]
 }
 
-/* output "gcp_spoke_1_vpc" {
-  value = module.gcp_spoke_1.vpc
-}
-
-output "gcp_spoke_1_aviatrix_spoke_gateway" {
-  value = module.gcp_spoke_1.spoke_gateway
-} */
-
 output "firewall_public_ip" {
   value = module.aws_transit_1.aviatrix_firewall_instance[0].public_ip
 }
-
-/* output "firewall_public_ip" {
-  value = module.azure_transit_1.aviatrix_firewall_instance[0].public_ip
-} */
-
-/* output "SPOKE2_VNET" {
-  value = module.azure_spoke_2.vnet
-} */
-
-
-
 
 ########################################################################
 
@@ -309,5 +290,8 @@ resource "aviatrix_segmentation_security_domain_association" "test_segmentation_
   transit_gateway_name = var.aws_transit1_name
   security_domain_name = "BU1"
   attachment_name      = aviatrix_transit_external_device_conn.s2c-onprem-dc.connection_name
-  depends_on           = [module.aws_transit_1]
+  depends_on           = [
+    module.aws_transit_1,
+    aviatrix_segmentation_security_domain.BU1
+    ]
 }
