@@ -143,11 +143,11 @@ resource "aws_route" "ace-onprem-mapped-route" {
 }
 
 module "ace-onprem-ubu" {
-  source                      = "terraform-aws-modules/ec2-instance/aws"
-  instance_type               = var.aws_test_instance_size
-  name                        = "ace-onprem-ubu"
-  ami                         = data.aws_ami.ubuntu2.id
-  key_name                    = var.onprem_ec2_key_name
+  source        = "terraform-aws-modules/ec2-instance/aws"
+  instance_type = var.aws_test_instance_size
+  name          = "ace-onprem-ubu"
+  ami           = data.aws_ami.ubuntu2.id
+  key_name      = var.onprem_ec2_key_name
   # instance_count              = 1
   subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
@@ -157,6 +157,13 @@ module "ace-onprem-ubu" {
     aws = aws.west2
   }
 }
+
+data "aws_network_interface" "ace-onprem-ubu-ni" {
+  provider = aws.west2
+  id       = module.ace-onprem-ubu.primary_network_interface_id
+}
+
+# private_ip = data.aws_network_interface.ace-onprem-ubu-ni.private_ip
 
 output "onprem_partner_csr_public_ip" {
   value = aws_instance.ace-onprem-partner-csr.public_ip
@@ -171,7 +178,8 @@ output "onprem_ubu_public_ip" {
 }
 
 output "onprem_ubu_private_ip" {
-  value = module.ace-onprem-ubu.private_ip
+  # value = module.ace-onprem-ubu.private_ip
+  value = data.aws_network_interface.ace-onprem-ubu-ni.private_ip
 }
 
 
