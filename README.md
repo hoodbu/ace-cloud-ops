@@ -19,9 +19,9 @@ It builds the following:
 
 Component | Version
 --- | ---
-Aviatrix Controller | UserConnect-6.4.2674 (6.4)
-Aviatrix Terraform Provider | > 2.19.4
-Terraform | 0.15
+Aviatrix Controller | UserConnect-6.5.1905 (6.5)
+Aviatrix Terraform Provider | > 2.20
+Terraform | > 1.0
 Azure Terraform Provider | > 2.0.0
 GCP Terraform Provider | 3.49
 AWS Terraform Provider | > 3.0
@@ -32,7 +32,7 @@ AWS Terraform Provider | > 3.0
 - Aviatrix Controller with Access Accounts defined for AWS, Azure, and GCP
 - Sufficient limits in place for CSPs and regions in scope **_(EIPs, Compute quotas, etc.)_**
 - Active subscriptions for the NGFW firewall images in scope
-- Terraform 0.13 in the user environment
+- Terraform 1.0 in the user environment
 - Terraform provider requirements are met (AWS, GCP, Azure) in the runtime environment
 - Account credentials for each CSP defined in environment. The following environment variables will be needed:
   - AWS_ACCESS_KEY_ID

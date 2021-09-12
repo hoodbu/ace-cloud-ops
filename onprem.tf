@@ -1,5 +1,6 @@
 // AWS Marketplace Opt-in Required - https://aws.amazon.com/marketplace/pp?sku=9fmjj3b9hombuy4jawab1i13i
 
+#################### ON-PREM CALL CENTER #################### 
 locals {
   onprem_user_data = <<EOF
 #!/bin/bash
@@ -81,7 +82,7 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
   user_data                   = <<EOF
     ios-config-100 = "username admin privilege 15 password ${var.ace_password}"
-    ios-config-104 = "hostname OnPrem-Partner1"
+    ios-config-104 = "hostname OnPrem-Partner"
     ios-config-1010 = "crypto keyring OnPrem-Aviatrix"
     ios-config-1020 = "pre-shared-key address ${module.gcp_spoke_1.spoke_gateway.eip} key ${var.ace_password}"
     ios-config-1030 = "crypto isakmp policy 1"
@@ -144,12 +145,10 @@ resource "aws_route" "ace-onprem-mapped-route" {
 
 module "ace-onprem-ubu" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
-  version                     = "2.21.0"
   instance_type               = var.aws_test_instance_size
   name                        = "ace-onprem-ubu"
   ami                         = data.aws_ami.ubuntu2.id
   key_name                    = var.onprem_ec2_key_name
-  instance_count              = 1
   subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
   associate_public_ip_address = true
@@ -157,6 +156,11 @@ module "ace-onprem-ubu" {
   providers = {
     aws = aws.west2
   }
+}
+
+data "aws_network_interface" "ace-onprem-ubu-ni" {
+  provider = aws.west2
+  id       = module.ace-onprem-ubu.primary_network_interface_id
 }
 
 output "onprem_partner_csr_public_ip" {
@@ -172,11 +176,11 @@ output "onprem_ubu_public_ip" {
 }
 
 output "onprem_ubu_private_ip" {
-  value = module.ace-onprem-ubu.private_ip
+  value = data.aws_network_interface.ace-onprem-ubu-ni.private_ip
 }
 
 
-#############################################################################
+#################### ON-PREM DC #################### 
 
 module "ace-onprem-dc-vpc" {
   providers      = { aws = aws.west2 }
@@ -234,7 +238,6 @@ resource "aws_security_group" "ace-onprem-dc-sg" {
 resource "aws_instance" "ace-onprem-dc-csr" {
   provider = aws.west2
   # Find an AMI by deploying manually from the Console first
-  # ami                         = "ami-05fecfb63c095734c"
   ami                         = "ami-011222f8fd462cc0c"
   instance_type               = "t2.medium"
   subnet_id                   = module.ace-onprem-dc-vpc.public_subnets[0]
