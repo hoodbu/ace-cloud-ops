@@ -124,12 +124,11 @@ module "security_group_2" {
 }
 
 module "aws_spoke_ubu_1" {
-  source        = "terraform-aws-modules/ec2-instance/aws"
-  instance_type = var.aws_test_instance_size
-  name          = "${var.aws_spoke1_name}-ubu"
-  ami           = data.aws_ami.ubuntu.id
-  key_name      = var.EW1_ec2_key_name
-  # instance_count              = 1
+  source                      = "terraform-aws-modules/ec2-instance/aws"
+  instance_type               = var.aws_test_instance_size
+  name                        = "${var.aws_spoke1_name}-ubu"
+  ami                         = data.aws_ami.ubuntu.id
+  key_name                    = var.EW1_ec2_key_name
   subnet_id                   = module.aws_spoke_1.vpc.public_subnets[0].subnet_id
   vpc_security_group_ids      = [module.security_group_1.this_security_group_id]
   associate_public_ip_address = true
@@ -145,12 +144,11 @@ data "aws_network_interface" "aws-spoke1-ubu-ni" {
 }
 
 module "aws_spoke_ubu_2" {
-  source        = "terraform-aws-modules/ec2-instance/aws"
-  instance_type = var.aws_test_instance_size
-  name          = "${var.aws_spoke2_name}-ubu"
-  ami           = data.aws_ami.ubuntu.id
-  key_name      = var.EW1_ec2_key_name
-  # instance_count              = 1
+  source                      = "terraform-aws-modules/ec2-instance/aws"
+  instance_type               = var.aws_test_instance_size
+  name                        = "${var.aws_spoke2_name}-ubu"
+  ami                         = data.aws_ami.ubuntu.id
+  key_name                    = var.EW1_ec2_key_name
   subnet_id                   = module.aws_spoke_2.vpc.public_subnets[0].subnet_id
   vpc_security_group_ids      = [module.security_group_2.this_security_group_id]
   associate_public_ip_address = true
@@ -170,8 +168,6 @@ output "aws_spoke1_ubu_public_ip" {
 }
 
 output "aws_spoke1_ubu_private_ip" {
-  # value = aws_instance.aws_spoke_1.private_ip
-  # value = module.aws_spoke_ubu_1.private_ip
   value = data.aws_network_interface.aws-spoke1-ubu-ni.private_ip
 }
 
@@ -180,7 +176,5 @@ output "aws_spoke2_ubu_public_ip" {
 }
 
 output "aws_spoke2_ubu_private_ip" {
-  # value = aws_instance.aws_spoke_2.private_ip
-  # value = module.aws_spoke_ubu_2.private_ip
   value = data.aws_network_interface.aws-spoke2-ubu-ni.private_ip
 }
