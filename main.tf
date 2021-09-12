@@ -19,13 +19,13 @@ resource "tls_private_key" "avtx_key" {
 
 resource "aws_key_pair" "aws_west1_key" {
   provider   = aws.west
-  key_name   = var.EW1_ec2_key_name
+  key_name   = var.ec2_key_name
   public_key = tls_private_key.avtx_key.public_key_openssh
 }
 
 resource "aws_key_pair" "aws_west2_key" {
   provider   = aws.west2
-  key_name   = var.onprem_ec2_key_name
+  key_name   = var.ec2_key_name
   public_key = tls_private_key.avtx_key.public_key_openssh
 }
 
