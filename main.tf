@@ -249,11 +249,11 @@ resource "aviatrix_fqdn" "fqdn_filter_spoke1" {
     gw_name = aviatrix_gateway.ace-azure-egress-fqdn1.gw_name
   }
 
-  fqdn_tag            = var.egress_fqdn_tag
+  fqdn_tag            = var.egress_fqdn_discover_tag
   manage_domain_names = false
 }
 
-# Create another Gateway in the Azure Spoke for Egress FQDN
+# Create a Gateway in Azure Spoke 2 for Egress FQDN
 resource "aviatrix_gateway" "ace-azure-egress-fqdn2" {
   cloud_type   = 8
   account_name = var.azure_account_name
@@ -277,12 +277,12 @@ resource "aviatrix_fqdn" "fqdn_filter_spoke2" {
     gw_name = aviatrix_gateway.ace-azure-egress-fqdn2.gw_name
   }
 
-  fqdn_tag            = var.egress_fqdn_tag
+  fqdn_tag            = var.egress_fqdn_patches_tag
   manage_domain_names = false
 }
 
 resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
-  fqdn_tag_name = var.egress_fqdn_tag
+  fqdn_tag_name = var.egress_fqdn_patches_tag
   fqdn          = "ntp.ubuntu.com"
   protocol      = "udp"
   port          = "123"
