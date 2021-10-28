@@ -156,23 +156,6 @@ module "gcp_spoke_1" {
   transit_gw      = module.gcp_transit_1.transit_gateway.gw_name
 }
 
-# Create another Gateway in the Azure Spoke for Egress FQDN (later on)
-resource "aviatrix_gateway" "ace-azure-egress-fqdn" {
-  cloud_type   = 8
-  account_name = var.azure_account_name
-  gw_name      = "${var.azure_spoke2_name}-egress"
-  vpc_id       = module.azure_spoke_2.vnet.vpc_id
-  vpc_reg      = var.azure_spoke2_region
-  gw_size      = var.azure_spoke_instance_size
-  subnet       = module.azure_spoke_2.vnet.public_subnets[0].cidr
-  lifecycle {
-    ignore_changes = [
-      single_ip_snat
-    ]
-  }
-  single_ip_snat = false
-}
-
 # Multi region Multi-Cloud transit peering
 module "transit-peering" {
   # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-mc-transit-peering.git?ref=v1.0.3"
@@ -242,11 +225,56 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   remote_subnet_virtual      = "192.168.2.0/24"
 }
 
-resource "aviatrix_fqdn" "fqdn_filter" {
+# Create a Gateway in Azure Spoke 1 for Egress FQDN
+resource "aviatrix_gateway" "ace-azure-egress-fqdn1" {
+  cloud_type   = 8
+  account_name = var.azure_account_name
+  gw_name      = "${var.azure_spoke1_name}-egress"
+  vpc_id       = module.azure_spoke_1.vnet.vpc_id
+  vpc_reg      = var.azure_spoke1_region
+  gw_size      = var.azure_spoke_instance_size
+  subnet       = module.azure_spoke_1.vnet.public_subnets[0].cidr
+  lifecycle {
+    ignore_changes = [
+      single_ip_snat
+    ]
+  }
+  single_ip_snat = false
+}
+
+resource "aviatrix_fqdn" "fqdn_filter_spoke1" {
+  fqdn_mode    = "black"
+  fqdn_enabled = true
+  gw_filter_tag_list {
+    gw_name = aviatrix_gateway.ace-azure-egress-fqdn1.gw_name
+  }
+
+  fqdn_tag            = var.egress_fqdn_tag
+  manage_domain_names = false
+}
+
+# Create another Gateway in the Azure Spoke for Egress FQDN
+resource "aviatrix_gateway" "ace-azure-egress-fqdn2" {
+  cloud_type   = 8
+  account_name = var.azure_account_name
+  gw_name      = "${var.azure_spoke2_name}-egress"
+  vpc_id       = module.azure_spoke_2.vnet.vpc_id
+  vpc_reg      = var.azure_spoke2_region
+  gw_size      = var.azure_spoke_instance_size
+  subnet       = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  lifecycle {
+    ignore_changes = [
+      single_ip_snat
+    ]
+  }
+  single_ip_snat = false
+}
+
+resource "aviatrix_fqdn" "fqdn_filter_spoke2" {
   fqdn_mode    = "white"
   fqdn_enabled = true
   gw_filter_tag_list {
-    gw_name = aviatrix_gateway.ace-azure-egress-fqdn.gw_name
+    gw_name = aviatrix_gateway.ace-azure-egress-fqdn2.gw_name
   }
 
   fqdn_tag            = var.egress_fqdn_tag
@@ -259,7 +287,7 @@ resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
   protocol      = "udp"
   port          = "123"
   depends_on = [
-    aviatrix_fqdn.fqdn_filter
+    aviatrix_fqdn.fqdn_filter_spoke2
   ]
 }
 
