@@ -199,6 +199,10 @@ variable "gcp_spoke1_cidr" {
   default = "172.16.211.0/24"
 }
 
-variable "egress_fqdn_tag" {
-  default = "ACE-CLOUD-OPS"
+variable "egress_fqdn_patches_tag" {
+  default = "ACE-UBUNTU-PATCHES"
+}
+
+variable "egress_fqdn_discover_tag" {
+  default = "ACE-DISCOVER"
 }
