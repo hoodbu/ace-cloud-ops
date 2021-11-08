@@ -18,6 +18,7 @@ resource "google_compute_firewall" "gcp-comp-firewall" {
     protocol = "tcp"
     ports    = [80, 443, 22]
   }
+  source_ranges = ["0.0.0.0/0"]
 }
 
 resource "google_compute_address" "gcp-spoke1-eip" {
