@@ -56,7 +56,7 @@ variable "aws_firewall_image" {
 
 variable "aws_firewall_image_version" {
   # default = "R80.40-294.581"
-  default = "(7.0.1)"
+  default = "(7.0.2)"
 }
 
 variable "aws_spoke1_region" {
