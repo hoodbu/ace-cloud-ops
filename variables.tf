@@ -168,7 +168,6 @@ variable "azure_fw_instance_size" {
   default = "Standard_D3_v2"
 }
 
-
 variable "gcp_account_name" {
 }
 
@@ -197,6 +196,10 @@ variable "gcp_spoke1_name" {
 
 variable "gcp_spoke1_cidr" {
   default = "172.16.211.0/24"
+}
+
+variable "gcp_test_instance_size" {
+  default = "f1-micro"
 }
 
 variable "egress_fqdn_patches_tag" {
