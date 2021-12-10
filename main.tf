@@ -215,6 +215,7 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   connection_type            = "mapped"
   remote_gateway_type        = "generic"
   tunnel_type                = "route"
+  enable_ikev2               = true
   primary_cloud_gateway_name = module.gcp_spoke_1.vpc.name
   remote_gateway_ip          = aws_instance.ace-onprem-partner-csr.public_ip
   pre_shared_key             = var.ace_password
