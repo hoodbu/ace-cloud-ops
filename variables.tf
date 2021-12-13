@@ -34,7 +34,7 @@ variable "aws_account_name" {
 
 variable "aws_transit_instance_size" {
   type    = string
-  default = "c5n.xlarge"
+  default = "t2.micro"
 }
 
 variable "aws_transit1_region" {
