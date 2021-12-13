@@ -113,7 +113,7 @@ resource "aws_instance" "ace-onprem-partner-csr" {
     ios-config-1230 = "set ikev2-profile OnPrem-Aviatrix"
     ios-config-1235 = "set security-association lifetime kilobytes disable"
     ios-config-1300 = "interface Tunnel1
-    ios-config-1305 = "ip address 169.255.50.161 255.255.255.255"
+    ios-config-1305 = "ip address 169.254.0.2 255.255.255.252"
     ios-config-1310 = "ip mtu 1436"
     ios-config-1315 = "ip tcp adjust-mss 1387"
     ios-config-1320 = "tunnel source GigabitEthernet1"
