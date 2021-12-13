@@ -220,8 +220,8 @@ resource "aviatrix_site2cloud" "s2c-onprem-partner" {
   remote_gateway_ip          = aws_instance.ace-onprem-partner-csr.public_ip
   pre_shared_key             = var.ace_password
   # phase1_remote_identifier   = [aws_instance.ace-onprem-partner-csr.private_ip]
-  local_tunnel_ip            = "169.254.0.1"
-  remote_tunnel_ip           = "169.254.0.2"
+  local_tunnel_ip            = "169.254.0.1/30"
+  remote_tunnel_ip           = "169.254.0.2/30"
   local_subnet_cidr          = "172.16.211.0/24"
   local_subnet_virtual       = "192.168.1.0/24"
   remote_subnet_cidr         = "172.16.211.0/24"
