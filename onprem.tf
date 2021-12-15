@@ -191,7 +191,7 @@ data "aws_network_interface" "ace-onprem-ubu-ni" {
 #   value = aws_instance.ace-onprem-partner-csr.public_ip
 # }
 
-output "aws_eip.ace-onprem-partner-csr-eip.public_ip" {
+output "ace_onprem_partner_csr_eip_public_ip" {
   value = aws_eip.ace-onprem-partner-csr-eip.public_ip
 }
 
