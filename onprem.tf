@@ -110,7 +110,7 @@ resource "aws_instance" "ace-onprem-partner-csr" {
     ios-config-1160 = "exit"
     ios-config-1165 = "crypto ikev2 profile OnPrem-Aviatrix"
     ios-config-1170 = "match identity remote address ${module.gcp_spoke_1.spoke_gateway.eip} 255.255.255.255"
-    ios-config-1175 = "identity local address $aws_eip.ace-onprem-partner-csr-eip.public_ip"
+    ios-config-1175 = "identity local address ${aws_eip.ace-onprem-partner-csr-eip.public_ip}"
     ios-config-1180 = "authentication remote pre-share"
     ios-config-1185 = "authentication local pre-share"
     ios-config-1190 = "keyring local OnPrem-Aviatrix"
@@ -191,7 +191,7 @@ data "aws_network_interface" "ace-onprem-ubu-ni" {
 #   value = aws_instance.ace-onprem-partner-csr.public_ip
 # }
 
-output "ace_onprem_partner_csr_eip_public_ip" {
+output "onprem_partner_csr_public_ip" {
   value = aws_eip.ace-onprem-partner-csr-eip.public_ip
 }
 
