@@ -70,11 +70,13 @@ resource "aws_security_group" "ace-onprem-partner-sg" {
 }
 
 resource "aws_eip_association" "eip_assoc" {
+  provider = aws.west2
   instance_id   = aws_instance.ace-onprem-partner-csr.id
   allocation_id = aws_eip.aws-onprem-partner-csr-eip.id
 }
 
 resource "aws_eip" "aws-onprem-partner-csr-eip" {
+  provider = aws.west2
   vpc = true
 }
 
