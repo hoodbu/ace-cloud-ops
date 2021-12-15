@@ -139,6 +139,9 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   tags = {
     Name = "ace-onprem-partner-csr"
   }
+  depends_on = [
+    aws_eip.ace-onprem-partner-csr-eip
+  ]
 }
 
 data "aws_instance" "ace-onprem-partner-csr" {
