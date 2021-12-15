@@ -69,6 +69,15 @@ resource "aws_security_group" "ace-onprem-partner-sg" {
   }
 }
 
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.aws-onprem-partner-csr.id
+  allocation_id = aws_eip.aws-onprem-partner-csr-eip.id
+}
+
+resource "aws_eip" "aws-onprem-partner-csr-eip" {
+  vpc = true
+}
+
 resource "aws_instance" "ace-onprem-partner-csr" {
   provider = aws.west2
   # Find an AMI by deploying manually from the Console first
@@ -76,7 +85,8 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   ami                         = "ami-011222f8fd462cc0c"
   instance_type               = "t2.medium"
   subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
-  associate_public_ip_address = true
+  # associate_public_ip_address = true
+  associate_public_ip_address = false
   source_dest_check           = false
   key_name                    = aws_key_pair.aws_west2_key.key_name
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
