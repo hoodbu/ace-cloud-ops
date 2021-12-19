@@ -13,7 +13,7 @@ It builds the following:
 - Multi-Cloud Segmentation (2 security domains, no connection policy)
 - Site2Cloud connection between Spoke in GCP and On-Prem Cisco CSR (emulated in AWS)
 - Site2Cloud connection between Transit in AWS and a separate On-Prem Cisco CSR (emulated in AWS)
-- Egress FQDN gateway in Azure Spoke 2
+- Egress FQDN gateway in Azure Spoke 1 and 2
 
 <img src="topology.png">
 
@@ -29,7 +29,7 @@ AWS Terraform Provider | > 3.0
 ### Dependencies
 
 - Software version requirements met
-- Aviatrix Controller with Access Accounts defined for AWS, Azure, and GCP
+- Aviatrix Controller with Access Accounts defined for AWS, Azure, and GCP. Default account names are 'aws-account', 'azure-account', and 'gcp-account' respectively.
 - Sufficient limits in place for CSPs and regions in scope **_(EIPs, Compute quotas, etc.)_**
 - Active subscriptions for the NGFW firewall images in scope
 - Terraform 1.0 in the user environment
