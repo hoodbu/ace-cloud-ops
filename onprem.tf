@@ -70,14 +70,14 @@ resource "aws_security_group" "ace-onprem-partner-sg" {
 }
 
 resource "aws_eip_association" "eip_assoc" {
-  provider = aws.west2
+  provider      = aws.west2
   instance_id   = aws_instance.ace-onprem-partner-csr.id
   allocation_id = aws_eip.ace-onprem-partner-csr-eip.id
 }
 
 resource "aws_eip" "ace-onprem-partner-csr-eip" {
   provider = aws.west2
-  vpc = true
+  vpc      = true
 }
 
 resource "aws_instance" "ace-onprem-partner-csr" {
@@ -87,7 +87,6 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   ami                         = "ami-011222f8fd462cc0c"
   instance_type               = "t2.medium"
   subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
-  # associate_public_ip_address = true
   associate_public_ip_address = false
   source_dest_check           = false
   key_name                    = aws_key_pair.aws_west2_key.key_name
@@ -186,10 +185,6 @@ data "aws_network_interface" "ace-onprem-ubu-ni" {
   provider = aws.west2
   id       = module.ace-onprem-ubu.primary_network_interface_id
 }
-
-# output "onprem_partner_csr_public_ip" {
-#   value = aws_instance.ace-onprem-partner-csr.public_ip
-# }
 
 output "onprem_partner_csr_public_ip" {
   value = aws_eip.ace-onprem-partner-csr-eip.public_ip

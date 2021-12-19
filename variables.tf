@@ -30,6 +30,7 @@ variable "suffix" {
 }
 
 variable "aws_account_name" {
+  default = "aws-account"
 }
 
 variable "aws_transit_instance_size" {
@@ -92,6 +93,7 @@ variable "ec2_key_name" {
 }
 
 variable "azure_account_name" {
+  default = "azure-account"
 }
 
 variable "azure_subscription_id" {
@@ -169,6 +171,7 @@ variable "azure_fw_instance_size" {
 }
 
 variable "gcp_account_name" {
+  default = "gcp-account"
 }
 
 variable "account_name_in_gcp" {
