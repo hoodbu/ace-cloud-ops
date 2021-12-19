@@ -69,6 +69,17 @@ resource "aws_security_group" "ace-onprem-partner-sg" {
   }
 }
 
+resource "aws_eip_association" "eip_assoc" {
+  provider      = aws.west2
+  instance_id   = aws_instance.ace-onprem-partner-csr.id
+  allocation_id = aws_eip.ace-onprem-partner-csr-eip.id
+}
+
+resource "aws_eip" "ace-onprem-partner-csr-eip" {
+  provider = aws.west2
+  vpc      = true
+}
+
 resource "aws_instance" "ace-onprem-partner-csr" {
   provider = aws.west2
   # Find an AMI by deploying manually from the Console first
@@ -76,48 +87,60 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   ami                         = "ami-011222f8fd462cc0c"
   instance_type               = "t2.medium"
   subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
-  associate_public_ip_address = true
+  associate_public_ip_address = false
   source_dest_check           = false
   key_name                    = aws_key_pair.aws_west2_key.key_name
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
   user_data                   = <<EOF
-    ios-config-100 = "username admin privilege 15 password ${var.ace_password}"
-    ios-config-104 = "hostname OnPrem-Partner"
-    ios-config-1010 = "crypto keyring OnPrem-Aviatrix"
-    ios-config-1020 = "pre-shared-key address ${module.gcp_spoke_1.spoke_gateway.eip} key ${var.ace_password}"
-    ios-config-1030 = "crypto isakmp policy 1"
-    ios-config-1040 = "encryption aes 256"
-    ios-config-1050 = "hash sha256"
-    ios-config-1060 = "authentication pre-share"
-    ios-config-1070 = "group 14"
-    ios-config-1080 = "lifetime 28800"
-    ios-config-1090 = "crypto isakmp keepalive 10 3 periodic"
-    ios-config-1091 = "crypto isakmp profile OnPrem-Aviatrix"
-    ios-config-1100 = "keyring OnPrem-Aviatrix"
-    ios-config-1110   = "self-identity address"
-    ios-config-1120  = "match identity address ${module.gcp_spoke_1.spoke_gateway.eip} 255.255.255.255"
-    ios-config-1130 = "crypto ipsec transform-set OnPrem-Aviatrix esp-aes 256 esp-sha256-hmac"
-    ios-config-1140 = "mode tunnel"
-    ios-config-1150 = "crypto ipsec df-bit clear"
-    ios-config-1160 = "crypto ipsec profile OnPrem-Aviatrix"
-    ios-config-1170 = "set transform-set OnPrem-Aviatrix"
-    ios-config-1180 = "set pfs group14"
-    ios-config-1190 = "set isakmp-profile OnPrem-Aviatrix"
-    ios-config-1200 = "interface Tunnel1
-    ios-config-1210 = "ip address 169.255.0.1 255.255.255.255"
-    ios-config-1220 = "ip mtu 1436"
-    ios-config-1230 = "ip tcp adjust-mss 1387"
-    ios-config-1240 = "tunnel source GigabitEthernet1"
-    ios-config-1250 = "tunnel mode ipsec ipv4"
-    ios-config-1260 = "tunnel destination ${module.gcp_spoke_1.spoke_gateway.eip}"
-    ios-config-1270 = "tunnel protection ipsec profile OnPrem-Aviatrix"
-    ios-config-1280 = "ip virtual-reassembly"
-    ios-config-1300 = "ip route 192.168.1.0 255.255.255.0 Tunnel1"
-    ios-config-1310 = "write memory"
+    ios-config-100  = "username admin privilege 15 password ${var.ace_password}"
+    ios-config-104  = "hostname OnPrem-Partner"
+    ios-config-1100 = "crypto ikev2 proposal avx-s2c"
+    ios-config-1105 = "encryption aes-cbc-256"
+    ios-config-1110 = "integrity sha256"
+    ios-config-1115 = "group 14"
+    ios-config-1120 = "crypto ikev2 policy 1"
+    ios-config-1125 = "proposal avx-s2c"
+    ios-config-1130 = "crypto ikev2 keyring OnPrem-Aviatrix"
+    ios-config-1135 = "peer OnPrem-Aviatrix"
+    ios-config-1140 = "address ${module.gcp_spoke_1.spoke_gateway.eip}"
+    ios-config-1145 = "identity address ${module.gcp_spoke_1.spoke_gateway.eip}"
+    ios-config-1150 = "pre-shared-key ${var.ace_password}"
+    ios-config-1155 = "exit"
+    ios-config-1160 = "exit"
+    ios-config-1165 = "crypto ikev2 profile OnPrem-Aviatrix"
+    ios-config-1170 = "match identity remote address ${module.gcp_spoke_1.spoke_gateway.eip} 255.255.255.255"
+    ios-config-1175 = "identity local address ${aws_eip.ace-onprem-partner-csr-eip.public_ip}"
+    ios-config-1180 = "authentication remote pre-share"
+    ios-config-1185 = "authentication local pre-share"
+    ios-config-1190 = "keyring local OnPrem-Aviatrix"
+    ios-config-1195 = "lifetime 28800"
+    ios-config-1199 = "dpd 10 3 periodic"
+    ios-config-1200 = "crypto ipsec transform-set OnPrem-Aviatrix esp-aes 256 esp-sha256-hmac"
+    ios-config-1205 = "mode tunnel"
+    ios-config-1210 = "crypto ipsec df-bit clear"
+    ios-config-1215 = "crypto ipsec profile OnPrem-Aviatrix"
+    ios-config-1220 = "set transform-set OnPrem-Aviatrix"
+    ios-config-1225 = "set pfs group14"
+    ios-config-1230 = "set ikev2-profile OnPrem-Aviatrix"
+    ios-config-1235 = "set security-association lifetime kilobytes disable"
+    ios-config-1300 = "interface Tunnel1
+    ios-config-1305 = "ip address 169.254.0.2 255.255.255.252"
+    ios-config-1310 = "ip mtu 1436"
+    ios-config-1315 = "ip tcp adjust-mss 1387"
+    ios-config-1320 = "tunnel source GigabitEthernet1"
+    ios-config-1325 = "tunnel mode ipsec ipv4"
+    ios-config-1330 = "tunnel destination ${module.gcp_spoke_1.spoke_gateway.eip}"
+    ios-config-1335 = "tunnel protection ipsec profile OnPrem-Aviatrix"
+    ios-config-1340 = "ip virtual-reassembly"
+    ios-config-1400 = "ip route 192.168.1.0 255.255.255.0 Tunnel1"
+    ios-config-1500 = "do write memory"
   EOF
   tags = {
     Name = "ace-onprem-partner-csr"
   }
+  depends_on = [
+    aws_eip.ace-onprem-partner-csr-eip
+  ]
 }
 
 data "aws_instance" "ace-onprem-partner-csr" {
@@ -164,7 +187,7 @@ data "aws_network_interface" "ace-onprem-ubu-ni" {
 }
 
 output "onprem_partner_csr_public_ip" {
-  value = aws_instance.ace-onprem-partner-csr.public_ip
+  value = aws_eip.ace-onprem-partner-csr-eip.public_ip
 }
 
 output "onprem_partner_csr_private_ip" {

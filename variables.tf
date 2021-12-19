@@ -30,11 +30,12 @@ variable "suffix" {
 }
 
 variable "aws_account_name" {
+  default = "aws-account"
 }
 
 variable "aws_transit_instance_size" {
   type    = string
-  default = "c5n.xlarge"
+  default = "c5.xlarge"
 }
 
 variable "aws_transit1_region" {
@@ -56,7 +57,7 @@ variable "aws_firewall_image" {
 
 variable "aws_firewall_image_version" {
   # default = "R80.40-294.581"
-  default = "(7.0.2)"
+  default = "(7.0.3)"
 }
 
 variable "aws_spoke1_region" {
@@ -92,6 +93,7 @@ variable "ec2_key_name" {
 }
 
 variable "azure_account_name" {
+  default = "azure-account"
 }
 
 variable "azure_subscription_id" {
@@ -169,6 +171,7 @@ variable "azure_fw_instance_size" {
 }
 
 variable "gcp_account_name" {
+  default = "gcp-account"
 }
 
 variable "account_name_in_gcp" {
