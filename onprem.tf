@@ -1,20 +1,6 @@
 // AWS Marketplace Opt-in Required - https://aws.amazon.com/marketplace/pp?sku=9fmjj3b9hombuy4jawab1i13i
 
 #################### ON-PREM CALL CENTER #################### 
-locals {
-  onprem_user_data = <<EOF
-#!/bin/bash
-sudo hostnamectl set-hostname "Call-Center"
-sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
-sudo apt update -y
-sudo apt upgrade -y
-sudo apt-get -y install traceroute unzip build-essential git gcc hping3 apache2 net-tools
-sudo apt autoremove
-sudo /etc/init.d/ssh restart
-sudo echo "<html><h1>Aviatrix is awesome</h1></html>" > /var/www/html/index.html 
-EOF
-}
 
 module "ace-onprem-partner-vpc" {
   providers      = { aws = aws.west2 }
@@ -27,6 +13,14 @@ module "ace-onprem-partner-vpc" {
   tags = {
     Terraform   = "true"
     Environment = "ACE"
+  }
+}
+
+data "template_file" "onprem_user_data" {
+  template = file("${path.module}/aws-vm-config/aws_bootstrap.sh")
+  vars = {
+    name     = "Call-Center"
+    password = var.ace_password
   }
 }
 
@@ -175,7 +169,7 @@ module "ace-onprem-ubu" {
   subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
   vpc_security_group_ids      = [aws_security_group.ace-onprem-partner-sg.id]
   associate_public_ip_address = true
-  user_data_base64            = base64encode(local.onprem_user_data)
+  user_data_base64            = base64encode(data.template_file.onprem_user_data.rendered)
   providers = {
     aws = aws.west2
   }
