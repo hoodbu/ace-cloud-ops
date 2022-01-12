@@ -1,16 +1,3 @@
-variable "username" {
-  type    = string
-  default = "admin"
-}
-
-variable "password" {
-  type = string
-}
-
-variable "controller_ip" {
-  type = string
-}
-
 variable "ace_email" {
   type = string
 }

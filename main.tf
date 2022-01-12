@@ -96,7 +96,7 @@ module "azure_transit_1" {
   source              = "terraform-aviatrix-modules/azure-transit/aviatrix"
   version             = "4.0.0"
   ha_gw               = var.ha_enabled
-  account             = var.azure_account_name
+  account             = aviatrix_account.azure_account.account_name
   region              = var.azure_transit1_region
   name                = var.azure_transit1_name
   cidr                = var.azure_transit1_cidr
@@ -110,7 +110,7 @@ module "azure_transit_1" {
 module "azure_spoke_1" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
   version         = "4.0.0"
-  account         = var.azure_account_name
+  account         = aviatrix_account.azure_account.account_name
   region          = var.azure_spoke1_region
   name            = var.azure_spoke1_name
   cidr            = var.azure_spoke1_cidr
@@ -126,7 +126,7 @@ module "azure_spoke_1" {
 module "azure_spoke_2" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
   version         = "4.0.0"
-  account         = var.azure_account_name
+  account         = aviatrix_account.azure_account.account_name
   region          = var.azure_spoke2_region
   name            = var.azure_spoke2_name
   cidr            = var.azure_spoke2_cidr
