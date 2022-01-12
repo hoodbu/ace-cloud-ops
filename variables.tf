@@ -34,7 +34,6 @@ variable "aws_account_name" {
 }
 
 variable "aws_transit_instance_size" {
-  type    = string
   default = "c5.xlarge"
 }
 
@@ -58,6 +57,10 @@ variable "aws_firewall_image" {
 variable "aws_firewall_image_version" {
   # default = "R80.40-294.581"
   default = "(7.0.3)"
+}
+
+variable "aws_spoke_instance_size" {
+  default = "t3.micro"
 }
 
 variable "aws_spoke1_region" {
@@ -85,7 +88,7 @@ variable "aws_spoke2_cidr" {
 }
 
 variable "aws_test_instance_size" {
-  default = "t2.micro"
+  default = "c5n.xlarge"
 }
 
 variable "ec2_key_name" {
@@ -164,10 +167,6 @@ variable "azure_spoke_instance_size" {
 
 variable "azure_test_instance_size" {
   default = "Standard_B1ms"
-}
-
-variable "azure_fw_instance_size" {
-  default = "Standard_D3_v2"
 }
 
 variable "gcp_account_name" {

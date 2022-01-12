@@ -65,34 +65,20 @@ data "aws_ami" "amazon_linux_west2" {
   }
 }
 
-locals {
-  bu1_frontend_user_data = <<EOF
-#!/bin/bash
-sudo hostnamectl set-hostname "BU1-Frontend"
-sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
-sudo apt update -y
-sudo apt upgrade -y
-sudo apt-get -y install traceroute unzip build-essential git gcc hping3 apache2 net-tools
-sudo apt autoremove
-sudo /etc/init.d/ssh restart
-sudo echo "<html><h1>Aviatrix is awesome</h1></html>" > /var/www/html/index.html 
-EOF
+data "template_file" "bu1_frontend_user_data" {
+  template = file("${path.module}/aws-vm-config/aws_bootstrap.sh")
+  vars = {
+    name     = "BU1-Frontend"
+    password = var.ace_password
+  }
 }
 
-locals {
-  bu2_mobile_app_user_data = <<EOF
-#!/bin/bash
-sudo hostnamectl set-hostname "BU2-Mobile-App"
-sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-sudo echo 'ubuntu:${var.ace_password}' | /usr/sbin/chpasswd
-sudo apt update -y
-sudo apt upgrade -y
-sudo apt-get -y install traceroute unzip build-essential git gcc hping3 apache2 net-tools
-sudo apt autoremove
-sudo /etc/init.d/ssh restart
-sudo echo "<html><h1>Aviatrix is awesome</h1></html>" > /var/www/html/index.html 
-EOF
+data "template_file" "bu2_mobile_app_user_data" {
+  template = file("${path.module}/aws-vm-config/aws_bootstrap.sh")
+  vars = {
+    name     = "BU2-Mobile-App"
+    password = var.ace_password
+  }
 }
 
 module "security_group_1" {
@@ -103,7 +89,23 @@ module "security_group_1" {
   vpc_id              = module.aws_spoke_1.vpc.vpc_id
   ingress_cidr_blocks = ["0.0.0.0/0"]
   ingress_rules       = ["http-80-tcp", "ssh-tcp", "all-icmp"]
-  egress_rules        = ["all-all"]
+  ingress_with_cidr_blocks = [
+    {
+      from_port   = 8888
+      to_port     = 8888
+      protocol    = "tcp"
+      description = "ethr tool"
+      cidr_blocks = "${data.aws_network_interface.aws-spoke2-ubu-ni.private_ip}/32"
+    },
+    {
+      from_port   = 5000
+      to_port     = 5020
+      protocol    = "tcp"
+      description = "ntttcp tool"
+      cidr_blocks = "${data.aws_network_interface.aws-spoke2-ubu-ni.private_ip}/32"
+    },
+  ]
+  egress_rules = ["all-all"]
   providers = {
     aws = aws.west
   }
@@ -132,7 +134,7 @@ module "aws_spoke_ubu_1" {
   subnet_id                   = module.aws_spoke_1.vpc.public_subnets[0].subnet_id
   vpc_security_group_ids      = [module.security_group_1.this_security_group_id]
   associate_public_ip_address = true
-  user_data_base64            = base64encode(local.bu1_frontend_user_data)
+  user_data_base64            = base64encode(data.template_file.bu1_frontend_user_data.rendered)
   providers = {
     aws = aws.west
   }
@@ -152,7 +154,7 @@ module "aws_spoke_ubu_2" {
   subnet_id                   = module.aws_spoke_2.vpc.public_subnets[0].subnet_id
   vpc_security_group_ids      = [module.security_group_2.this_security_group_id]
   associate_public_ip_address = true
-  user_data_base64            = base64encode(local.bu2_mobile_app_user_data)
+  user_data_base64            = base64encode(data.template_file.bu2_mobile_app_user_data.rendered)
   providers = {
     aws = aws.west
   }
