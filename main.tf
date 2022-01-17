@@ -305,6 +305,16 @@ resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
   ]
 }
 
+resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_2" {
+  fqdn_tag_name = var.egress_fqdn_patches_tag
+  fqdn          = "*.ubuntu.com"
+  protocol      = "tcp"
+  port          = "80"
+  depends_on = [
+    aviatrix_fqdn.fqdn_filter_spoke2
+  ]
+}
+
 output "firewall_public_ip" {
   value = module.aws_transit_1.aviatrix_firewall_instance[0].public_ip
 }
