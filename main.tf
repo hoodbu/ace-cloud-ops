@@ -1,5 +1,15 @@
 // ACE-ops Core Aviatrix Infrastructure
 
+# Create an Aviatrix Azure Account
+resource "aviatrix_account" "azure_account" {
+  account_name        = var.azure_account_name
+  cloud_type          = 8
+  arm_subscription_id = var.azure_subscription_id
+  arm_directory_id    = var.azure_tenant_id
+  arm_application_id  = var.azure_client_id
+  arm_application_key = var.azure_client_secret
+}
+
 # Private Key creation
 resource "tls_private_key" "avtx_key" {
   algorithm = "RSA"
@@ -61,6 +71,7 @@ module "aws_spoke_1" {
   ha_gw           = var.ha_enabled
   prefix          = var.prefix
   suffix          = var.suffix
+  instance_size   = var.aws_spoke_instance_size
   security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
   transit_gw      = module.aws_transit_1.transit_gateway.gw_name
 }
@@ -75,6 +86,7 @@ module "aws_spoke_2" {
   ha_gw           = var.ha_enabled
   prefix          = var.prefix
   suffix          = var.suffix
+  instance_size   = var.aws_spoke_instance_size
   security_domain = aviatrix_segmentation_security_domain.BU2.domain_name
   transit_gw      = module.aws_transit_1.transit_gateway.gw_name
 }
@@ -84,12 +96,13 @@ module "azure_transit_1" {
   source              = "terraform-aviatrix-modules/azure-transit/aviatrix"
   version             = "4.0.0"
   ha_gw               = var.ha_enabled
-  account             = var.azure_account_name
+  account             = aviatrix_account.azure_account.account_name
   region              = var.azure_transit1_region
   name                = var.azure_transit1_name
   cidr                = var.azure_transit1_cidr
   prefix              = var.prefix
   suffix              = var.suffix
+  instance_size       = var.azure_transit_instance_size
   enable_segmentation = true
 }
 
@@ -97,7 +110,7 @@ module "azure_transit_1" {
 module "azure_spoke_1" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
   version         = "4.0.0"
-  account         = var.azure_account_name
+  account         = aviatrix_account.azure_account.account_name
   region          = var.azure_spoke1_region
   name            = var.azure_spoke1_name
   cidr            = var.azure_spoke1_cidr
@@ -113,7 +126,7 @@ module "azure_spoke_1" {
 module "azure_spoke_2" {
   source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
   version         = "4.0.0"
-  account         = var.azure_account_name
+  account         = aviatrix_account.azure_account.account_name
   region          = var.azure_spoke2_region
   name            = var.azure_spoke2_name
   cidr            = var.azure_spoke2_cidr
@@ -287,6 +300,16 @@ resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_1" {
   fqdn          = "ntp.ubuntu.com"
   protocol      = "udp"
   port          = "123"
+  depends_on = [
+    aviatrix_fqdn.fqdn_filter_spoke2
+  ]
+}
+
+resource "aviatrix_fqdn_tag_rule" "fqdn_tag_rule_2" {
+  fqdn_tag_name = var.egress_fqdn_patches_tag
+  fqdn          = "*.ubuntu.com"
+  protocol      = "tcp"
+  port          = "80"
   depends_on = [
     aviatrix_fqdn.fqdn_filter_spoke2
   ]
