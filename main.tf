@@ -16,17 +16,6 @@ resource "tls_private_key" "avtx_key" {
   rsa_bits  = 2048
 }
 
-/* resource "local_file" "avtx_priv_key" {
-  content         = tls_private_key.avtx_key.private_key_pem
-  filename        = "avtx_priv_key.pem"
-  file_permission = "0400"
-  lifecycle {
-    ignore_changes = [
-      content
-    ]
-  }
-} */
-
 resource "aws_key_pair" "aws_west1_key" {
   provider   = aws.west
   key_name   = var.ec2_key_name
@@ -41,7 +30,6 @@ resource "aws_key_pair" "aws_west2_key" {
 
 # AWS Transit Modules
 module "aws_transit_1" {
-  # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
   source                               = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
   version                              = "5.0.0"
   account                              = var.aws_account_name
@@ -135,7 +123,6 @@ module "azure_spoke_2" {
 
 # GCP Transit Module
 module "gcp_transit_1" {
-  # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-gcp-transit.git?ref=v3.0.0"
   source              = "terraform-aviatrix-modules/mc-transit/aviatrix"
   version             = "1.1.0"
   cloud               = "GCP"
