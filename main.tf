@@ -16,17 +16,6 @@ resource "tls_private_key" "avtx_key" {
   rsa_bits  = 2048
 }
 
-/* resource "local_file" "avtx_priv_key" {
-  content         = tls_private_key.avtx_key.private_key_pem
-  filename        = "avtx_priv_key.pem"
-  file_permission = "0400"
-  lifecycle {
-    ignore_changes = [
-      content
-    ]
-  }
-} */
-
 resource "aws_key_pair" "aws_west1_key" {
   provider   = aws.west
   key_name   = var.ec2_key_name
@@ -41,9 +30,8 @@ resource "aws_key_pair" "aws_west2_key" {
 
 # AWS Transit Modules
 module "aws_transit_1" {
-  # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-aws-transit-firenet.git?ref=v2.0.2"
   source                               = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
-  version                              = "4.0.1"
+  version                              = "5.0.0"
   account                              = var.aws_account_name
   region                               = var.aws_transit1_region
   name                                 = var.aws_transit1_name
@@ -62,30 +50,28 @@ module "aws_transit_1" {
 
 # AWS Spoke Modules
 module "aws_spoke_1" {
-  source          = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version         = "4.0.1"
+  source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
+  version         = "1.1.0"
+  cloud           = "AWS"
   account         = var.aws_account_name
   region          = var.aws_spoke1_region
   name            = var.aws_spoke1_name
   cidr            = var.aws_spoke1_cidr
   ha_gw           = var.ha_enabled
-  prefix          = var.prefix
-  suffix          = var.suffix
   instance_size   = var.aws_spoke_instance_size
   security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
   transit_gw      = module.aws_transit_1.transit_gateway.gw_name
 }
 
 module "aws_spoke_2" {
-  source          = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version         = "4.0.1"
+  source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
+  version         = "1.1.0"
+  cloud           = "AWS"
   account         = var.aws_account_name
   region          = var.aws_spoke2_region
   name            = var.aws_spoke2_name
   cidr            = var.aws_spoke2_cidr
   ha_gw           = var.ha_enabled
-  prefix          = var.prefix
-  suffix          = var.suffix
   instance_size   = var.aws_spoke_instance_size
   security_domain = aviatrix_segmentation_security_domain.BU2.domain_name
   transit_gw      = module.aws_transit_1.transit_gateway.gw_name
@@ -93,29 +79,27 @@ module "aws_spoke_2" {
 
 # Azure Transit Module
 module "azure_transit_1" {
-  source              = "terraform-aviatrix-modules/azure-transit/aviatrix"
-  version             = "4.0.0"
+  source              = "terraform-aviatrix-modules/mc-transit/aviatrix"
+  version             = "1.1.0"
+  cloud               = "Azure"
   ha_gw               = var.ha_enabled
   account             = aviatrix_account.azure_account.account_name
   region              = var.azure_transit1_region
   name                = var.azure_transit1_name
   cidr                = var.azure_transit1_cidr
-  prefix              = var.prefix
-  suffix              = var.suffix
   instance_size       = var.azure_transit_instance_size
   enable_segmentation = true
 }
 
 # Azure Spoke 1 
 module "azure_spoke_1" {
-  source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version         = "4.0.0"
+  source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
+  version         = "1.1.0"
+  cloud           = "Azure"
   account         = aviatrix_account.azure_account.account_name
   region          = var.azure_spoke1_region
   name            = var.azure_spoke1_name
   cidr            = var.azure_spoke1_cidr
-  prefix          = var.prefix
-  suffix          = var.suffix
   instance_size   = var.azure_spoke_instance_size
   ha_gw           = var.ha_enabled
   security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
@@ -124,14 +108,13 @@ module "azure_spoke_1" {
 
 # Azure Spoke 2
 module "azure_spoke_2" {
-  source          = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version         = "4.0.0"
+  source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
+  version         = "1.1.0"
+  cloud           = "Azure"
   account         = aviatrix_account.azure_account.account_name
   region          = var.azure_spoke2_region
   name            = var.azure_spoke2_name
   cidr            = var.azure_spoke2_cidr
-  prefix          = var.prefix
-  suffix          = var.suffix
   instance_size   = var.azure_spoke_instance_size
   ha_gw           = var.ha_enabled
   security_domain = aviatrix_segmentation_security_domain.BU2.domain_name
@@ -140,30 +123,26 @@ module "azure_spoke_2" {
 
 # GCP Transit Module
 module "gcp_transit_1" {
-  # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-gcp-transit.git?ref=v3.0.0"
-  source              = "terraform-aviatrix-modules/gcp-transit/aviatrix"
-  version             = "3.0.0"
+  source              = "terraform-aviatrix-modules/mc-transit/aviatrix"
+  version             = "1.1.0"
+  cloud               = "GCP"
   account             = var.gcp_account_name
   region              = var.gcp_transit1_region
   name                = var.gcp_transit1_name
   cidr                = var.gcp_transit1_cidr
-  prefix              = var.prefix
-  suffix              = var.suffix
   enable_segmentation = true
   ha_gw               = var.ha_enabled
 }
 
 # Aviatrix GCP Spoke 1
 module "gcp_spoke_1" {
-  # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-gcp-spoke.git?ref=v3.0.0"
-  source          = "terraform-aviatrix-modules/gcp-spoke/aviatrix"
-  version         = "3.0.0"
+  source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
+  version         = "1.1.0"
+  cloud           = "GCP"
   account         = var.gcp_account_name
   region          = var.gcp_spoke1_region
   name            = var.gcp_spoke1_name
   cidr            = var.gcp_spoke1_cidr
-  prefix          = var.prefix
-  suffix          = var.suffix
   ha_gw           = var.ha_enabled
   security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
   transit_gw      = module.gcp_transit_1.transit_gateway.gw_name
@@ -244,10 +223,10 @@ resource "aviatrix_gateway" "ace-azure-egress-fqdn1" {
   cloud_type   = 8
   account_name = var.azure_account_name
   gw_name      = "${var.azure_spoke1_name}-egress"
-  vpc_id       = module.azure_spoke_1.vnet.vpc_id
+  vpc_id       = module.azure_spoke_1.vpc.vpc_id
   vpc_reg      = var.azure_spoke1_region
   gw_size      = var.azure_spoke_instance_size
-  subnet       = module.azure_spoke_1.vnet.public_subnets[0].cidr
+  subnet       = module.azure_spoke_1.vpc.public_subnets[0].cidr
   lifecycle {
     ignore_changes = [
       single_ip_snat
@@ -272,10 +251,10 @@ resource "aviatrix_gateway" "ace-azure-egress-fqdn2" {
   cloud_type   = 8
   account_name = var.azure_account_name
   gw_name      = "${var.azure_spoke2_name}-egress"
-  vpc_id       = module.azure_spoke_2.vnet.vpc_id
+  vpc_id       = module.azure_spoke_2.vpc.vpc_id
   vpc_reg      = var.azure_spoke2_region
   gw_size      = var.azure_spoke_instance_size
-  subnet       = module.azure_spoke_2.vnet.public_subnets[0].cidr
+  subnet       = module.azure_spoke_2.vpc.public_subnets[0].cidr
   lifecycle {
     ignore_changes = [
       single_ip_snat

@@ -2,7 +2,7 @@
 
 ### Summary
 
-This repository builds out a __completed__ representation of the infrastructure created for the Aviatrix ACE Cloud Ops course.
+This repository builds out a __completed__ representation of the infrastructure created for the Aviatrix ACE Cloud Operations course.
 
 It builds the following:
 
@@ -19,8 +19,8 @@ It builds the following:
 
 Component | Version
 --- | ---
-Aviatrix Controller | UserConnect-6.5.2898 (6.5)
-Aviatrix Terraform Provider | > 2.20.1
+Aviatrix Controller | UserConnect-6.6.5230 (6.6)
+Aviatrix Terraform Provider | > 2.21.0-6.6.ga
 Terraform | > 1.0
 Azure Terraform Provider | > 2.0.0
 GCP Terraform Provider | 3.49
