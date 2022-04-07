@@ -37,7 +37,6 @@ variable "aws_transit1_cidr" {
 }
 
 variable "aws_firewall_image" {
-  # default = "Check Point CloudGuard IaaS All-In-One"
   default = "Fortinet FortiGate Next-Generation Firewall"
 }
 
@@ -138,7 +137,12 @@ variable "insane" {
   default = true
 }
 
-variable "ha_enabled" {
+variable "transit_ha_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "spoke_ha_enabled" {
   type    = bool
   default = false
 }
