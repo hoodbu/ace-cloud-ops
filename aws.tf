@@ -164,19 +164,3 @@ data "aws_network_interface" "aws-spoke2-ubu-ni" {
   provider = aws.west
   id       = module.aws_spoke_ubu_2.primary_network_interface_id
 }
-
-output "aws_spoke1_ubu_public_ip" {
-  value = module.aws_spoke_ubu_1.public_ip
-}
-
-output "aws_spoke1_ubu_private_ip" {
-  value = data.aws_network_interface.aws-spoke1-ubu-ni.private_ip
-}
-
-output "aws_spoke2_ubu_public_ip" {
-  value = module.aws_spoke_ubu_2.public_ip
-}
-
-output "aws_spoke2_ubu_private_ip" {
-  value = data.aws_network_interface.aws-spoke2-ubu-ni.private_ip
-}

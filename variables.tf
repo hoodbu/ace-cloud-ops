@@ -42,7 +42,6 @@ variable "aws_firewall_image" {
 }
 
 variable "aws_firewall_image_version" {
-  # default = "R80.40-294.581"
   default = "(7.0.5)"
 }
 

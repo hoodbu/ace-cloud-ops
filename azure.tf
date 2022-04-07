@@ -202,11 +202,3 @@ resource "azurerm_linux_virtual_machine" "azure_spoke2_vm" {
   }
   custom_data = base64encode(data.template_file.azure-spoke2-init.rendered)
 }
-
-output "azure_spoke1_ubu_private_ip" {
-  value = azurerm_linux_virtual_machine.azure_spoke1_vm.private_ip_address
-}
-
-output "azure_spoke2_ubu_private_ip" {
-  value = azurerm_linux_virtual_machine.azure_spoke2_vm.private_ip_address
-}
