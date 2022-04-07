@@ -180,23 +180,6 @@ data "aws_network_interface" "ace-onprem-ubu-ni" {
   id       = module.ace-onprem-ubu.primary_network_interface_id
 }
 
-output "onprem_partner_csr_public_ip" {
-  value = aws_eip.ace-onprem-partner-csr-eip.public_ip
-}
-
-output "onprem_partner_csr_private_ip" {
-  value = aws_instance.ace-onprem-partner-csr.private_ip
-}
-
-output "onprem_ubu_public_ip" {
-  value = module.ace-onprem-ubu.public_ip
-}
-
-output "onprem_ubu_private_ip" {
-  value = data.aws_network_interface.ace-onprem-ubu-ni.private_ip
-}
-
-
 #################### ON-PREM DC #################### 
 
 module "ace-onprem-dc-vpc" {
@@ -314,12 +297,4 @@ resource "aws_instance" "ace-onprem-dc-csr" {
   tags = {
     Name = "ace-onprem-dc-csr"
   }
-}
-
-output "onprem_dc_csr_public_ip" {
-  value = aws_instance.ace-onprem-dc-csr.public_ip
-}
-
-output "onprem_dc_csr_private_ip" {
-  value = aws_instance.ace-onprem-dc-csr.private_ip
 }

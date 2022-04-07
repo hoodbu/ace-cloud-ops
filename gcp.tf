@@ -50,11 +50,3 @@ resource "google_compute_instance" "gcp-spoke1-ubu" {
   }
   metadata_startup_script = data.template_file.gcp-init.rendered
 }
-
-output "gcp_spoke1_ubu_public_ip" {
-  value = google_compute_address.gcp-spoke1-eip.address
-}
-
-output "gcp_spoke1_ubu_private_ip" {
-  value = google_compute_instance.gcp-spoke1-ubu.network_interface[0].network_ip
-}
