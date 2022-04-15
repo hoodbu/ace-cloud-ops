@@ -1,5 +1,5 @@
 output "firewall_public_ip" {
-  value = module.aws_transit_1.aviatrix_firewall_instance[0].public_ip
+  value = module.aws_firenet_1.aviatrix_firewall_instance[0].public_ip
 }
 
 output "onprem_partner_csr_public_ip" {

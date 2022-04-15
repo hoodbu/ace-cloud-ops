@@ -1,4 +1,4 @@
-// ACE-ops Core Aviatrix Infrastructure
+// ACE Cloud Ops Transit Infrastructure
 
 # Private Key creation
 resource "tls_private_key" "avtx_key" {
@@ -18,36 +18,31 @@ resource "aws_key_pair" "aws_west2_key" {
   public_key = tls_private_key.avtx_key.public_key_openssh
 }
 
-# AWS Transit Modules
 module "aws_transit_1" {
-  source                               = "terraform-aviatrix-modules/aws-transit-firenet/aviatrix"
-  version                              = "5.0.0"
-  account                              = var.aws_account_name
-  region                               = var.aws_transit1_region
-  name                                 = var.aws_transit1_name
-  cidr                                 = var.aws_transit1_cidr
-  ha_gw                                = var.ha_enabled
-  prefix                               = var.prefix
-  suffix                               = var.suffix
-  egress_enabled                       = false
-  insane_mode                          = false
-  instance_size                        = var.aws_transit_instance_size
-  enable_segmentation                  = true
-  keep_alive_via_lan_interface_enabled = true
-  firewall_image                       = var.aws_firewall_image
-  firewall_image_version               = var.aws_firewall_image_version
+  source                        = "terraform-aviatrix-modules/mc-transit/aviatrix"
+  version                       = "2.0.0"
+  cloud                         = "AWS"
+  account                       = var.aws_account_name
+  region                        = var.aws_transit1_region
+  name                          = var.aws_transit1_name
+  cidr                          = var.aws_transit1_cidr
+  ha_gw                         = var.transit_ha_enabled
+  enable_transit_firenet        = true
+  enable_egress_transit_firenet = false
+  insane_mode                   = var.insane
+  enable_segmentation           = true
 }
 
 # AWS Spoke Modules
 module "aws_spoke_1" {
   source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version         = "1.1.0"
+  version         = "1.1.2"
   cloud           = "AWS"
   account         = var.aws_account_name
   region          = var.aws_spoke1_region
   name            = var.aws_spoke1_name
   cidr            = var.aws_spoke1_cidr
-  ha_gw           = var.ha_enabled
+  ha_gw           = var.spoke_ha_enabled
   instance_size   = var.aws_spoke_instance_size
   security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
   transit_gw      = module.aws_transit_1.transit_gateway.gw_name
@@ -55,13 +50,13 @@ module "aws_spoke_1" {
 
 module "aws_spoke_2" {
   source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version         = "1.1.0"
+  version         = "1.1.2"
   cloud           = "AWS"
   account         = var.aws_account_name
   region          = var.aws_spoke2_region
   name            = var.aws_spoke2_name
   cidr            = var.aws_spoke2_cidr
-  ha_gw           = var.ha_enabled
+  ha_gw           = var.spoke_ha_enabled
   instance_size   = var.aws_spoke_instance_size
   security_domain = aviatrix_segmentation_security_domain.BU2.domain_name
   transit_gw      = module.aws_transit_1.transit_gateway.gw_name
@@ -70,9 +65,9 @@ module "aws_spoke_2" {
 # Azure Transit Module
 module "azure_transit_1" {
   source              = "terraform-aviatrix-modules/mc-transit/aviatrix"
-  version             = "1.1.0"
+  version             = "1.1.3"
   cloud               = "Azure"
-  ha_gw               = var.ha_enabled
+  ha_gw               = var.transit_ha_enabled
   account             = aviatrix_account.azure_account.account_name
   region              = var.azure_transit1_region
   name                = var.azure_transit1_name
@@ -84,14 +79,14 @@ module "azure_transit_1" {
 # Azure Spoke 1 
 module "azure_spoke_1" {
   source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version         = "1.1.0"
+  version         = "1.1.2"
   cloud           = "Azure"
   account         = aviatrix_account.azure_account.account_name
   region          = var.azure_spoke1_region
   name            = var.azure_spoke1_name
   cidr            = var.azure_spoke1_cidr
   instance_size   = var.azure_spoke_instance_size
-  ha_gw           = var.ha_enabled
+  ha_gw           = var.spoke_ha_enabled
   security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
   transit_gw      = module.azure_transit_1.transit_gateway.gw_name
 }
@@ -99,14 +94,14 @@ module "azure_spoke_1" {
 # Azure Spoke 2
 module "azure_spoke_2" {
   source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version         = "1.1.0"
+  version         = "1.1.2"
   cloud           = "Azure"
   account         = aviatrix_account.azure_account.account_name
   region          = var.azure_spoke2_region
   name            = var.azure_spoke2_name
   cidr            = var.azure_spoke2_cidr
   instance_size   = var.azure_spoke_instance_size
-  ha_gw           = var.ha_enabled
+  ha_gw           = var.spoke_ha_enabled
   security_domain = aviatrix_segmentation_security_domain.BU2.domain_name
   transit_gw      = module.azure_transit_1.transit_gateway.gw_name
 }
@@ -114,35 +109,34 @@ module "azure_spoke_2" {
 # GCP Transit Module
 module "gcp_transit_1" {
   source              = "terraform-aviatrix-modules/mc-transit/aviatrix"
-  version             = "1.1.0"
+  version             = "1.1.3"
   cloud               = "GCP"
   account             = var.gcp_account_name
   region              = var.gcp_transit1_region
   name                = var.gcp_transit1_name
   cidr                = var.gcp_transit1_cidr
   enable_segmentation = true
-  ha_gw               = var.ha_enabled
+  ha_gw               = var.transit_ha_enabled
 }
 
 # Aviatrix GCP Spoke 1
 module "gcp_spoke_1" {
   source          = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version         = "1.1.0"
+  version         = "1.1.2"
   cloud           = "GCP"
   account         = var.gcp_account_name
   region          = var.gcp_spoke1_region
   name            = var.gcp_spoke1_name
   cidr            = var.gcp_spoke1_cidr
-  ha_gw           = var.ha_enabled
+  ha_gw           = var.spoke_ha_enabled
   security_domain = aviatrix_segmentation_security_domain.BU1.domain_name
   transit_gw      = module.gcp_transit_1.transit_gateway.gw_name
 }
 
 # Multi region Multi-Cloud transit peering
 module "transit-peering" {
-  # source = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-mc-transit-peering.git?ref=v1.0.3"
   source  = "terraform-aviatrix-modules/mc-transit-peering/aviatrix"
-  version = "1.0.3"
+  version = "1.0.5"
   transit_gateways = [
     module.gcp_transit_1.transit_gateway.gw_name,
     module.azure_transit_1.transit_gateway.gw_name,
