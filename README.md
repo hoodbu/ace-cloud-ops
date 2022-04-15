@@ -29,7 +29,8 @@ AWS Terraform Provider | > 3.0
 ### Dependencies
 
 - Software version requirements met
-- Aviatrix Controller with Access Accounts defined for AWS, Azure, and GCP. Default account names are 'aws-account', 'azure-account', and 'gcp-account' respectively.
+- Aviatrix Controller with Access Accounts defined for AWS, and GCP. Default account names are 'aws-account' and 'gcp-account' respectively. 
+- Azure account will be onboarded matching the TF credentials provided as environment variables.
 - Sufficient limits in place for CSPs and regions in scope **_(EIPs, Compute quotas, etc.)_**
 - Active subscriptions for the NGFW firewall images in scope
 - Terraform 1.0 in the user environment
