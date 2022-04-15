@@ -19,16 +19,16 @@ locals {
 }
 
 data "aviatrix_firenet_vendor_integration" "ven_int" {
-  vpc_id        = module.mc_transit_aws.vpc.vpc_id
-  instance_id   = module.mc_firenet_aws.aviatrix_firewall_instance[0].instance_id
+  vpc_id        = module.aws_transit_1.vpc.vpc_id
+  instance_id   = module.aws_firenet_1.aviatrix_firewall_instance[0].instance_id
   vendor_type   = "Fortinet FortiGate"
-  public_ip     = module.mc_firenet_aws.aviatrix_firewall_instance[0].public_ip
+  public_ip     = module.aws_firenet_1.aviatrix_firewall_instance[0].public_ip
   username      = "ACE"
-  firewall_name = module.mc_firenet_aws.aviatrix_firewall_instance[0].firewall_name
+  firewall_name = module.aws_firenet_1.aviatrix_firewall_instance[0].firewall_name
   save          = true
   api_token     = "gnk1dQkGpg77jQ6d6r543Qqc05Q5p3"
   depends_on = [
-    module.mc_firenet_aws
+    module.aws_firenet_1
   ]
 }
 
