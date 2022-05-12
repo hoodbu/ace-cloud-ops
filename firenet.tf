@@ -6,8 +6,8 @@ module "aws_firenet_1" {
   firewall_image                       = var.aws_firewall_image
   firewall_image_version               = var.aws_firewall_image_version
   keep_alive_via_lan_interface_enabled = true
-  custom_fw_names = ["ACE-FW"]
-  user_data_1     = local.fw1
+  custom_fw_names                      = ["ACE-FW"]
+  user_data_1                          = local.fw1
 }
 
 locals {
@@ -19,14 +19,16 @@ locals {
 }
 
 data "aviatrix_firenet_vendor_integration" "ven_int" {
-  vpc_id        = module.aws_transit_1.vpc.vpc_id
-  instance_id   = module.aws_firenet_1.aviatrix_firewall_instance[0].instance_id
-  vendor_type   = "Fortinet FortiGate"
-  public_ip     = module.aws_firenet_1.aviatrix_firewall_instance[0].public_ip
-  username      = "ACE"
-  firewall_name = module.aws_firenet_1.aviatrix_firewall_instance[0].firewall_name
-  save          = true
-  api_token     = "gnk1dQkGpg77jQ6d6r543Qqc05Q5p3"
+  vpc_id            = module.aws_transit_1.vpc.vpc_id
+  instance_id       = module.aws_firenet_1.aviatrix_firewall_instance[0].instance_id
+  vendor_type       = "Fortinet FortiGate"
+  public_ip         = module.aws_firenet_1.aviatrix_firewall_instance[0].public_ip
+  username          = "ACE"
+  firewall_name     = module.aws_firenet_1.aviatrix_firewall_instance[0].firewall_name
+  save              = true
+  number_of_retries = 2
+  retry_interval    = 15
+  api_token         = "gnk1dQkGpg77jQ6d6r543Qqc05Q5p3"
   depends_on = [
     module.aws_firenet_1
   ]
