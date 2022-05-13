@@ -137,15 +137,6 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   ]
 }
 
-# data "aws_instance" "ace-onprem-partner-csr" {
-#   provider = aws.west2
-#   filter {
-#     name   = "tag:Name"
-#     values = ["ace-onprem-partner-csr"]
-#   }
-#   depends_on = [aws_instance.ace-onprem-partner-csr]
-# }
-
 data "aws_route_table" "ace-onprem-partner-rtb" {
   provider   = aws.west2
   subnet_id  = module.ace-onprem-partner-vpc.public_subnets[0]
