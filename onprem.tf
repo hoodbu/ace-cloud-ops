@@ -137,15 +137,6 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   ]
 }
 
-data "aws_instance" "ace-onprem-partner-csr" {
-  provider = aws.west2
-  filter {
-    name   = "tag:Name"
-    values = ["ace-onprem-partner-csr"]
-  }
-  depends_on = [aws_instance.ace-onprem-partner-csr]
-}
-
 data "aws_route_table" "ace-onprem-partner-rtb" {
   provider   = aws.west2
   subnet_id  = module.ace-onprem-partner-vpc.public_subnets[0]
@@ -156,8 +147,9 @@ resource "aws_route" "ace-onprem-mapped-route" {
   provider               = aws.west2
   route_table_id         = data.aws_route_table.ace-onprem-partner-rtb.id
   destination_cidr_block = "192.168.1.0/24"
-  network_interface_id   = data.aws_instance.ace-onprem-partner-csr.network_interface_id
-  depends_on             = [module.ace-onprem-partner-vpc, aws_instance.ace-onprem-partner-csr]
+  # network_interface_id   = data.aws_instance.ace-onprem-partner-csr.network_interface_id
+  network_interface_id = aws_instance.ace-onprem-partner-csr.primary_network_interface_id
+  depends_on           = [module.ace-onprem-partner-vpc, aws_instance.ace-onprem-partner-csr]
 }
 
 module "ace-onprem-ubu" {

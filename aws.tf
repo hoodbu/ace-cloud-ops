@@ -127,6 +127,7 @@ module "security_group_2" {
 
 module "aws_spoke_ubu_1" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
+  version                     = "2.21.0"
   instance_type               = var.aws_test_instance_size
   name                        = "${var.aws_spoke1_name}-ubu"
   ami                         = data.aws_ami.ubuntu.id
@@ -142,11 +143,12 @@ module "aws_spoke_ubu_1" {
 
 data "aws_network_interface" "aws-spoke1-ubu-ni" {
   provider = aws.west
-  id       = module.aws_spoke_ubu_1.primary_network_interface_id
+  id       = module.aws_spoke_ubu_1.primary_network_interface_id[0]
 }
 
 module "aws_spoke_ubu_2" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
+  version                     = "2.21.0"
   instance_type               = var.aws_test_instance_size
   name                        = "${var.aws_spoke2_name}-ubu"
   ami                         = data.aws_ami.ubuntu.id
@@ -162,5 +164,5 @@ module "aws_spoke_ubu_2" {
 
 data "aws_network_interface" "aws-spoke2-ubu-ni" {
   provider = aws.west
-  id       = module.aws_spoke_ubu_2.primary_network_interface_id
+  id       = module.aws_spoke_ubu_2.primary_network_interface_id[0]
 }
