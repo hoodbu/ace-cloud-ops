@@ -28,7 +28,7 @@ resource "google_compute_address" "gcp-spoke1-eip" {
 }
 
 resource "google_compute_instance" "gcp-spoke1-ubu" {
-  name         = "${var.gcp_spoke1_name}-ubu"
+  name         = "${var.gcp_spoke1_name}-bu1-analytics"
   machine_type = var.gcp_test_instance_size
   zone         = "${var.gcp_spoke1_region}-b"
   tags         = ["tf-ubuntu"]
@@ -44,6 +44,11 @@ resource "google_compute_instance" "gcp-spoke1-ubu" {
     access_config {
       nat_ip = google_compute_address.gcp-spoke1-eip.address
     }
+  }
+  labels = {
+    name        = "${var.gcp_spoke1_name}-bu1-analytics"
+    terraform   = "true"
+    environment = "bu1"
   }
   metadata = {
     ssh-keys = tls_private_key.avtx_key.public_key_openssh

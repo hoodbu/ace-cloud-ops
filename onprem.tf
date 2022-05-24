@@ -9,11 +9,6 @@ module "ace-onprem-partner-vpc" {
   cidr           = "172.16.211.0/24"
   azs            = ["eu-west-2a"]
   public_subnets = ["172.16.211.0/24"]
-
-  tags = {
-    Terraform   = "true"
-    Environment = "ACE"
-  }
 }
 
 data "template_file" "onprem_user_data" {
@@ -130,7 +125,9 @@ resource "aws_instance" "ace-onprem-partner-csr" {
     ios-config-1500 = "do write memory"
   EOF
   tags = {
-    Name = "ace-onprem-partner-csr"
+    name        = "ace-onprem-partner-csr"
+    terraform   = "true"
+    environment = "onprem-partner"
   }
   depends_on = [
     aws_eip.ace-onprem-partner-csr-eip
@@ -181,10 +178,10 @@ module "ace-onprem-dc-vpc" {
   cidr           = "10.0.0.0/24"
   azs            = ["eu-west-2a"]
   public_subnets = ["10.0.0.0/24"]
-
   tags = {
-    Terraform   = "true"
-    Environment = "ACE"
+    name        = "ace-onprem-dc-csr"
+    terraform   = "true"
+    environment = "onprem-dc"
   }
 }
 
