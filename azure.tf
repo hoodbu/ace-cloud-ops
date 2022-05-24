@@ -6,7 +6,7 @@ data "template_file" "azure-spoke1-init" {
   }
 }
 
-# Spoke Ubuntu VM 1
+### Spoke Ubuntu VM 1
 resource "azurerm_network_interface" "main" {
   name                = "${var.azure_spoke1_name}-nic1"
   resource_group_name = module.azure_spoke_1.vpc.resource_group
@@ -72,7 +72,7 @@ resource "azurerm_network_interface_security_group_association" "main" {
 }
 
 resource "azurerm_linux_virtual_machine" "azure_spoke1_vm" {
-  name                            = "${var.azure_spoke1_name}-ubu"
+  name                            = "${var.azure_spoke1_name}-bu1-db"
   resource_group_name             = module.azure_spoke_1.vpc.resource_group
   location                        = var.azure_spoke1_region
   size                            = "Standard_B1ms"
@@ -98,10 +98,15 @@ resource "azurerm_linux_virtual_machine" "azure_spoke1_vm" {
     caching              = "ReadWrite"
   }
   custom_data = base64encode(data.template_file.azure-spoke1-init.rendered)
+  tags = {
+    name        = "${var.azure_spoke2_name}-bu1-db"
+    terraform   = "true"
+    environment = "bu1"
+  }
 }
 
 
-# Spoke Ubuntu VM 2
+### Spoke Ubuntu VM 2
 data "template_file" "azure-spoke2-init" {
   template = file("${path.module}/azure-vm-config/azure_bootstrap.sh")
   vars = {
@@ -175,7 +180,7 @@ resource "azurerm_network_interface_security_group_association" "main2" {
 }
 
 resource "azurerm_linux_virtual_machine" "azure_spoke2_vm" {
-  name                            = "${var.azure_spoke2_name}-ubu"
+  name                            = "${var.azure_spoke2_name}-bu2-db"
   resource_group_name             = module.azure_spoke_2.vpc.resource_group
   location                        = var.azure_spoke2_region
   size                            = "Standard_B1ms"
@@ -201,4 +206,9 @@ resource "azurerm_linux_virtual_machine" "azure_spoke2_vm" {
     caching              = "ReadWrite"
   }
   custom_data = base64encode(data.template_file.azure-spoke2-init.rendered)
+  tags = {
+    name        = "${var.azure_spoke2_name}-bu2-db"
+    terraform   = "true"
+    environment = "bu2"
+  }
 }
