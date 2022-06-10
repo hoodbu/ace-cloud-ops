@@ -1,6 +1,6 @@
 ### OnPrem Partner Site2Cloud ### 
 resource "aviatrix_site2cloud" "s2c-onprem-partner" {
-  vpc_id                     = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
+  vpc_id                     = module.gcp_spoke_1.vpc.vpc_id
   connection_name            = "ACE-ONPREM-CALLCENTER"
   connection_type            = "mapped"
   remote_gateway_type        = "generic"
