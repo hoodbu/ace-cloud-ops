@@ -1,6 +1,6 @@
 ### OnPrem Partner Site2Cloud ### 
 resource "aviatrix_site2cloud" "s2c-onprem-partner" {
-  vpc_id                     = "${module.gcp_spoke_1.vpc.vpc_id}~-~${var.account_name_in_gcp}"
+  vpc_id                     = module.gcp_spoke_1.vpc.vpc_id
   connection_name            = "ACE-ONPREM-CALLCENTER"
   connection_type            = "mapped"
   remote_gateway_type        = "generic"
@@ -35,12 +35,12 @@ resource "aviatrix_transit_external_device_conn" "s2c-onprem-dc" {
   custom_algorithms        = false
 }
 
-resource "aviatrix_segmentation_security_domain_association" "test_segmentation_security_domain_association" {
+resource "aviatrix_segmentation_network_domain_association" "test_segmentation_network_domain_association" {
   transit_gateway_name = var.aws_transit1_name
-  security_domain_name = "BU1"
+  network_domain_name  = "BU1"
   attachment_name      = aviatrix_transit_external_device_conn.s2c-onprem-dc.connection_name
   depends_on = [
     module.aws_transit_1,
-    aviatrix_segmentation_security_domain.BU1
+    aviatrix_segmentation_network_domain.BU1
   ]
 }
