@@ -76,6 +76,7 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   ami           = "ami-011222f8fd462cc0c"
   instance_type = "t2.medium"
   # subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
+  subnet_id                   = local.instance_subnet_id
   associate_public_ip_address = false
   source_dest_check           = false
   key_name                    = aws_key_pair.aws_west2_key.key_name
@@ -133,6 +134,9 @@ resource "aws_instance" "ace-onprem-partner-csr" {
     aws_eip.ace-onprem-partner-csr-eip,
     aws_security_group.ace-onprem-partner-sg
   ]
+  lifecycle {
+    ignore_changes = [subnet_id]
+  }
 }
 
 data "aws_route_table" "ace-onprem-partner-rtb" {
@@ -168,6 +172,36 @@ module "ace-onprem-ubu" {
 data "aws_network_interface" "ace-onprem-ubu-ni" {
   provider = aws.west2
   id       = module.ace-onprem-ubu.primary_network_interface_id
+}
+
+### capacity issue troubleshooting
+locals {
+  subnet_ids_list = tolist(data.aws_subnet_ids.current.ids)
+
+  subnet_ids_random_index = random_id.index.dec % length(data.aws_subnet_ids.current.ids)
+
+  instance_subnet_id = local.subnet_ids_list[local.subnet_ids_random_index]
+}
+
+resource "aws_instance" "instance" {
+  ami           = data.aws_ami.current.id
+  instance_type = "t3.micro"
+
+  subnet_id = local.instance_subnet_id
+  lifecycle {
+    ignore_changes = [subnet_id]
+  }
+  tags = {
+    Name = "random_subnet_test"
+  }
+}
+
+data "aws_vpc" "ace-on-prem-partner-vpc" {
+  default = true
+}
+
+data "aws_subnet_ids" "current" {
+  vpc_id = data.aws_vpc.ace-on-prem-partner-vpc.id
 }
 
 #################### ON-PREM DC #################### 
