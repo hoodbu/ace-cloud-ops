@@ -7,7 +7,7 @@ module "ace-onprem-partner-vpc" {
   source         = "terraform-aws-modules/vpc/aws"
   name           = "ace-onprem-partner-vpc"
   cidr           = "172.16.211.0/24"
-  azs            = ["eu-west-2a"]
+  azs            = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
   public_subnets = ["172.16.211.0/24"]
 }
 
@@ -73,9 +73,9 @@ resource "aws_instance" "ace-onprem-partner-csr" {
   provider = aws.west2
   # Find an AMI by deploying manually from the Console first
   # ami                         = "ami-05fecfb63c095734c"
-  ami                         = "ami-011222f8fd462cc0c"
-  instance_type               = "t2.medium"
-  subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
+  ami           = "ami-011222f8fd462cc0c"
+  instance_type = "t2.medium"
+  # subnet_id                   = module.ace-onprem-partner-vpc.public_subnets[0]
   associate_public_ip_address = false
   source_dest_check           = false
   key_name                    = aws_key_pair.aws_west2_key.key_name
