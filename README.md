@@ -19,12 +19,12 @@ It builds the following:
 
 Component | Version
 --- | ---
-Aviatrix Controller | UserConnect-6.6.5612 (6.6)
-Aviatrix Terraform Provider | > 2.21.2
+Aviatrix Controller | UserConnect-6.7.1319 (6.7)
+Aviatrix Terraform Provider | > 2.22.1
 Terraform | > 1.0
 Azure Terraform Provider | > 3.0.0
-GCP Terraform Provider | 3.49
-AWS Terraform Provider | > 3.0
+GCP Terraform Provider | > 4.0
+AWS Terraform Provider | > 4.0
 
 ### Dependencies
 
