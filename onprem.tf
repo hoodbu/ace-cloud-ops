@@ -130,7 +130,8 @@ resource "aws_instance" "ace-onprem-partner-csr" {
     environment = "onprem-partner"
   }
   depends_on = [
-    aws_eip.ace-onprem-partner-csr-eip
+    aws_eip.ace-onprem-partner-csr-eip,
+    aws_security_group.ace-onprem-partner-sg
   ]
 }
 
