@@ -7,7 +7,7 @@ module "ace-onprem-partner-vpc" {
   source         = "terraform-aws-modules/vpc/aws"
   name           = "ace-onprem-partner-vpc"
   cidr           = "172.16.211.0/24"
-  azs            = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
+  azs            = ["eu-west-2c", "eu-west-2b", "eu-west-2a"]
   public_subnets = ["172.16.211.0/24"]
 }
 
