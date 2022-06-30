@@ -175,6 +175,10 @@ data "aws_network_interface" "ace-onprem-ubu-ni" {
 }
 
 ### capacity issue troubleshooting
+resource "random_id" "index" {
+  byte_length = 2
+}
+
 locals {
   subnet_ids_list = tolist(data.aws_subnet_ids.current.ids)
 
