@@ -180,24 +180,9 @@ resource "random_id" "index" {
 }
 
 locals {
-  subnet_ids_list = tolist(data.aws_subnet_ids.current.ids)
-
+  subnet_ids_list         = tolist(data.aws_subnet_ids.current.ids)
   subnet_ids_random_index = random_id.index.dec % length(data.aws_subnet_ids.current.ids)
-
-  instance_subnet_id = local.subnet_ids_list[local.subnet_ids_random_index]
-}
-
-resource "aws_instance" "instance" {
-  ami           = data.aws_ami.current.id
-  instance_type = "t3.micro"
-
-  subnet_id = local.instance_subnet_id
-  lifecycle {
-    ignore_changes = [subnet_id]
-  }
-  tags = {
-    Name = "random_subnet_test"
-  }
+  instance_subnet_id      = local.subnet_ids_list[local.subnet_ids_random_index]
 }
 
 data "aws_vpc" "ace-on-prem-partner-vpc" {
