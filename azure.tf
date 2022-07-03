@@ -98,6 +98,9 @@ resource "azurerm_linux_virtual_machine" "azure_spoke1_vm" {
     caching              = "ReadWrite"
   }
   custom_data = base64encode(data.template_file.azure-spoke1-init.rendered)
+  depends_on = [
+    azurerm_network_interface_security_group_association.main
+  ]
   tags = {
     name        = "${var.azure_spoke2_name}-bu1-db"
     terraform   = "true"
@@ -206,6 +209,9 @@ resource "azurerm_linux_virtual_machine" "azure_spoke2_vm" {
     caching              = "ReadWrite"
   }
   custom_data = base64encode(data.template_file.azure-spoke2-init.rendered)
+  depends_on = [
+    azurerm_network_interface_security_group_association.main2
+  ]
   tags = {
     name        = "${var.azure_spoke2_name}-bu2-db"
     terraform   = "true"
