@@ -20,7 +20,7 @@ resource "aws_key_pair" "aws_west2_key" {
 
 module "aws_transit_1" {
   source                        = "terraform-aviatrix-modules/mc-transit/aviatrix"
-  version                       = "2.1.2"
+  version                       = "2.2.0"
   cloud                         = "AWS"
   account                       = var.aws_account_name
   region                        = var.aws_transit1_region
@@ -36,7 +36,7 @@ module "aws_transit_1" {
 # AWS Spoke Modules
 module "aws_spoke_1" {
   source         = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version        = "1.2.1"
+  version        = "1.3.0"
   cloud          = "AWS"
   account        = var.aws_account_name
   region         = var.aws_spoke1_region
@@ -50,7 +50,7 @@ module "aws_spoke_1" {
 
 module "aws_spoke_2" {
   source         = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version        = "1.2.1"
+  version        = "1.3.0"
   cloud          = "AWS"
   account        = var.aws_account_name
   region         = var.aws_spoke2_region
@@ -65,7 +65,7 @@ module "aws_spoke_2" {
 # Azure Transit Module
 module "azure_transit_1" {
   source              = "terraform-aviatrix-modules/mc-transit/aviatrix"
-  version             = "2.1.2"
+  version             = "2.2.0"
   cloud               = "Azure"
   ha_gw               = var.transit_ha_enabled
   account             = aviatrix_account.azure_account.account_name
@@ -79,7 +79,7 @@ module "azure_transit_1" {
 # Azure Spoke 1 
 module "azure_spoke_1" {
   source         = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version        = "1.2.1"
+  version        = "1.3.0"
   cloud          = "Azure"
   account        = aviatrix_account.azure_account.account_name
   region         = var.azure_spoke1_region
@@ -94,7 +94,7 @@ module "azure_spoke_1" {
 # Azure Spoke 2
 module "azure_spoke_2" {
   source         = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version        = "1.2.1"
+  version        = "1.3.0"
   cloud          = "Azure"
   account        = aviatrix_account.azure_account.account_name
   region         = var.azure_spoke2_region
@@ -109,7 +109,7 @@ module "azure_spoke_2" {
 # GCP Transit Module
 module "gcp_transit_1" {
   source              = "terraform-aviatrix-modules/mc-transit/aviatrix"
-  version             = "2.1.2"
+  version             = "2.2.0"
   cloud               = "GCP"
   account             = var.gcp_account_name
   region              = var.gcp_transit1_region
@@ -122,7 +122,7 @@ module "gcp_transit_1" {
 # Aviatrix GCP Spoke 1
 module "gcp_spoke_1" {
   source         = "terraform-aviatrix-modules/mc-spoke/aviatrix"
-  version        = "1.2.1"
+  version        = "1.3.0"
   cloud          = "GCP"
   account        = var.gcp_account_name
   region         = var.gcp_spoke1_region

@@ -1,7 +1,7 @@
 ### FireNet ###
 module "aws_firenet_1" {
   source                               = "terraform-aviatrix-modules/mc-firenet/aviatrix"
-  version                              = "1.0.0"
+  version                              = "1.2.0"
   transit_module                       = module.aws_transit_1
   firewall_image                       = var.aws_firewall_image
   firewall_image_version               = var.aws_firewall_image_version
